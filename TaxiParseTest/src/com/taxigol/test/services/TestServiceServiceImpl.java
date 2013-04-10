@@ -78,6 +78,19 @@ public class TestServiceServiceImpl extends TestCase{
 		
 	}
 	
+	public void testUpdateCancelar() throws IOException{
+		service.deleteAll();
+		Service serv = service.create("calle 132 a # 19-43", "54");
+		//creo un nuevo taxi
+		Taxi taxi = taxiService.createTaxi();
+		service.update(State.confirmado, "" + serv.getId(), taxi.getId());
+		service.update(State.cancelado, "" + serv.getId(), taxi.getId());
+		List<Service> services = service.getAll();
+		Service serv2 = services.get(0);
+		assertEquals(State.cancelado.toString(), serv2.getState());
+		assertEquals(taxi.getId(), serv2.getTaxiId());
+	}
+	
 	public void testUpdateNoDeberia() throws IOException{
 		service.deleteAll();
 		Service serv = service.create("calle 132 a # 19-43", "54");
