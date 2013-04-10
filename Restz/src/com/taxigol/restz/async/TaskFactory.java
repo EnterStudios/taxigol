@@ -13,7 +13,13 @@ public class TaskFactory<T> extends AsyncTask<Task<T>, Integer, T> {
 	private Task<T> handler;
 	
 	protected T doInBackground(Task<T>... params) {
-		return params[0].execute();
+		try {
+			return params[0].execute();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	};
 	
 	@SuppressWarnings("unchecked")

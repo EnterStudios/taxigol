@@ -19,6 +19,7 @@ public class ServiceFactory {
 	
 	public ServiceFactory(String baseUrl) {
 		client = new DefaultRestz();
+		this.baseUrl = baseUrl;
 	}
 	
 	public PositionService getPositionService(){

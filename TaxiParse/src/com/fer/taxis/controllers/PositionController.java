@@ -1,7 +1,5 @@
 package com.fer.taxis.controllers;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.location.Location;
 
@@ -9,7 +7,9 @@ import com.fer.taxis.activities.MapActivity.MapHandler;
 import com.fer.taxis.model.IdProvider;
 import com.fer.taxis.model.LocationReceiver;
 import com.fer.taxis.model.LocationReceiver.Handler;
+import com.fer.taxis.model.Position;
 import com.fer.taxis.model.services.PositionService;
+import com.taxigol.restz.async.Task;
 
 public class PositionController extends Controller implements Handler, MapHandler {
 
@@ -26,12 +26,17 @@ public class PositionController extends Controller implements Handler, MapHandle
 	}
 	
 	@Override
-	public void onLocationChanged(Location location) {
-		try {
-			client.updatePosition(idProvider.getId(), location.getLatitude(), location.getLongitude());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void onLocationChanged(final Location location) {
+		runAsync(new Task<Position>() {
+			@Override
+			public Position execute() throws Exception {
+				return client.updatePosition(idProvider.getId(), location.getLatitude(), location.getLongitude());
+			}
+			@Override
+			public void onSuccess(Position result) {
+				System.out.println("Position updated");
+			}
+		});
 	}
 	
 	@Override

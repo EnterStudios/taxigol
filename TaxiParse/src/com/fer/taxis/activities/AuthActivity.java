@@ -13,6 +13,7 @@ import com.fer.taxis.App;
 import com.fer.taxis.R;
 import com.fer.taxis.model.IdProvider;
 import com.fer.taxis.views.widgets.Dialog;
+import com.taxigol.restz.async.OnSuccess;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -51,7 +52,13 @@ public class AuthActivity extends Activity implements OnClickListener{
 		dialog = Dialog.showMessage("Autenticando", "Autenticando tu usuario y contraseña", this);
 		String username = txtLogin.getText().toString();
 		String password = txtPass.getText().toString();
-		handler.onLogin(username,password);
+		handler.onLogin(username,password, new OnSuccess<Void>(){
+			@Override
+			public void onSuccess(Void result) {
+				Intent i = new Intent(AuthActivity.this, MapActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 	
 	@Override
@@ -64,7 +71,6 @@ public class AuthActivity extends Activity implements OnClickListener{
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
-		System.out.println(intent);
 		if (intent.getStringExtra("exit")!=null){
 			Process.killProcess(Process.myPid());
 		}
@@ -81,6 +87,6 @@ public class AuthActivity extends Activity implements OnClickListener{
 	}
 
 	public interface AuthHandler extends IdProvider{
-		public void onLogin(String username, String password);
+		public void onLogin(String username, String password, OnSuccess<Void> callback);
 	}
 }

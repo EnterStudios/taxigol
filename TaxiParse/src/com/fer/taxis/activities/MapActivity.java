@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.fer.taxis.App;
 import com.fer.taxis.R;
 import com.fer.taxis.model.LocationReceiver.Handler;
-import com.fer.taxis.model.services.PanicService;
 import com.fer.taxis.views.widgets.Dialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,7 +57,7 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 	        case R.id.menu_map:
 	        	return true;
 	        case R.id.menu_panic:
-	        	startActivity(new Intent(this, PanicService.class));
+	        	startActivity(new Intent(this, PanicActivity.class));
 	            return true;
 	        case R.id.menu_services:
 	        	Intent i = new Intent(this, ServiciodeTaxiListActivity.class);

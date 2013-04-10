@@ -11,10 +11,8 @@ import com.fer.taxis.controllers.PanicController;
 import com.fer.taxis.controllers.PositionController;
 import com.fer.taxis.controllers.ServiceController;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
-import com.parse.SaveCallback;
 
 public class App extends Application{
 
@@ -24,23 +22,15 @@ public class App extends Application{
 	private AuthController authController; 
 	 
 	private ServiceFactory serviceFactory;
-	
-	private String installationId;
 	 
 	@Override
 	public void onCreate() {
 		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key)); 
-		ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
-			
-			@Override
-			public void done(ParseException exception) {
-				installationId = ParseInstallation.getCurrentInstallation().getObjectId();
-			}
-		});		
+		ParseInstallation.getCurrentInstallation().saveInBackground();		
 		PushService.subscribe(this, "Giants", MapActivity.class);
 		PushService.setDefaultPushCallback(this, MapActivity.class);
 		
-		serviceFactory = new ServiceFactory(getApplicationContext().getString(R.string.server_url));
+		serviceFactory = new ServiceFactory("http://gpsteleclub.herokuapp.com");
 		authController = new AuthController(getApplicationContext(),serviceFactory.getTaxiService());
 		
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());

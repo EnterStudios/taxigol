@@ -171,8 +171,8 @@ containing a value of this type.
         public static final int login_status=0x7f060005;
         public static final int login_status_message=0x7f060006;
         public static final int map=0x7f060011;
-        public static final int menu_map=0x7f06001e;
-        public static final int menu_panic=0x7f060020;
+        public static final int menu_map=0x7f060020;
+        public static final int menu_panic=0x7f06001e;
         public static final int menu_services=0x7f06001f;
         public static final int menu_settings=0x7f06001c;
         public static final int none=0x7f060000;

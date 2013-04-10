@@ -13,7 +13,7 @@ public interface Task<T> {
 	 * When this method is run, the actual task starts
 	 * @return the return object type
 	 */
-	public T execute();
+	public T execute() throws Exception;
 	/**
 	 * When the task finishes succesfully this method is run
 	 * @param result
