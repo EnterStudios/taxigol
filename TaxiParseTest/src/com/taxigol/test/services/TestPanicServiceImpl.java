@@ -12,8 +12,8 @@ import com.fer.taxis.model.services.PositionService;
 import com.fer.taxis.model.services.impl.PanicServiceImpl;
 import com.fer.taxis.model.services.impl.PositionServiceImpl;
 import com.fer.taxis.model.services.impl.TaxiServiceImpl;
-import com.restz.net.DefaultRestz;
-import com.restz.net.Restz;
+import com.taxigol.restz.DefaultRestz;
+import com.taxigol.restz.Restz;
 
 public class TestPanicServiceImpl extends TestCase{
 
@@ -23,7 +23,7 @@ public class TestPanicServiceImpl extends TestCase{
 	
 	public TestPanicServiceImpl() {
 		Restz client = new DefaultRestz();
-		String baseUrl = "http://192.168.0.10:3000";
+		String baseUrl = "http://192.168.0.10:3000"; 
 		service = new PanicServiceImpl(client, baseUrl);
 		taxiService = new TaxiServiceImpl(baseUrl, client);
 		positionService = new PositionServiceImpl(client, baseUrl);

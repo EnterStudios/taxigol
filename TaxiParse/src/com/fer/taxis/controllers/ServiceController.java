@@ -23,6 +23,7 @@ public class ServiceController extends Controller implements ConfirmacionHandler
 	@Override
 	public void onConfirmar(String serviceId) {
 		try {
+			//hay error porque hay diferentes métodos de update según lo que se quiere actualizar
 			client.update(State.confirmado, serviceId, idProvider.getId());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

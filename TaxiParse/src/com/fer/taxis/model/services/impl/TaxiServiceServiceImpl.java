@@ -3,6 +3,7 @@ package com.fer.taxis.model.services.impl;
 import java.io.IOException;
 
 import com.fer.taxis.model.Service;
+import com.fer.taxis.model.Taxi;
 import com.fer.taxis.model.services.TaxiServiceService;
 import com.fer.taxis.model.services.parsers.ServiceJsonParser;
 import com.taxigol.restz.Restz;
@@ -25,9 +26,24 @@ public class TaxiServiceServiceImpl extends AbstractService<Service> implements
 	}
 
 	@Override
-	public void update(State s, String serviceId, String taxiId) throws IOException {
+	public void update(State s, String serviceId) throws IOException {
 		PutRequest put = client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json");
-		put.getContent();
+		
+		String result = put.getContent();
 	}
+	
+	//update para hacer una confirmación de un pedido
+	public void update(State s, String serviceId, String taxiId) throws IOException {
+		PutRequest put = client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json","state", s.toString(), "taxi_id", taxiId);
+		
+		String result = put.getContent();
+	}
+	
+	//update para cumplir una confirmación
+		public void update(State s, String serviceId, String taxiId, String verCode) throws IOException {
+			PutRequest put = client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json","state", s.toString(), "taxi_id", taxiId, "verification_code", verCode);
+			
+			String result = put.getContent();
+		}
 
 }

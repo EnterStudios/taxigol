@@ -88,7 +88,7 @@ public class DefaultRestz implements Restz{
 	
 	@Override
 	public PutRequest put(String baseUrl) {
-		return put(baseUrl);
+		return put(baseUrl, new String []{});
 	}
 	
 	@Override

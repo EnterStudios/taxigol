@@ -8,8 +8,8 @@ import junit.framework.TestCase;
 import com.fer.taxis.model.Position;
 import com.fer.taxis.model.services.PositionService;
 import com.fer.taxis.model.services.impl.PositionServiceImpl;
-import com.restz.net.DefaultRestz;
-import com.restz.net.Restz;
+import com.taxigol.restz.DefaultRestz;
+import com.taxigol.restz.Restz;
 
 public class TestPositionServiceImpl extends TestCase{
 

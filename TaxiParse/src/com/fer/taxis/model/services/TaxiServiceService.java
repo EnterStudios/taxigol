@@ -9,21 +9,23 @@ public interface TaxiServiceService {
 
 	public enum State{
 		// A penas se crea el servicio cuando no ha sido 
-		// confirmado por ningún taxi
+		// confirmado por ningï¿½n taxi
 		pendiente,
 		//Cuando un taxista se compromete a atender el servicio pero
 		//no ha llegado al cliente
 		confirmado,
-		//El taxista verifica el código del cliente
+		//El taxista verifica el cï¿½digo del cliente
 		cumplido,
-		//El taxista había confirmado, pero nunca le llega al cliente
+		//El taxista habï¿½a confirmado, pero nunca le llega al cliente
 		abandonado,
-		//El taxista llega, pero el cliente ya se había ido
+		//El taxista llega, pero el cliente ya se habï¿½a ido
 		cancelado
 	}
 	
 	public Service create(String address, String verificationCode) throws IOException;
+	public void update(State s, String serviceId) throws IOException;
 	public void update(State s, String serviceId, String taxiId) throws IOException;
+	public void update(State s, String serviceId, String taxiId, String verCode) throws IOException;
 	public void deleteAll() throws IOException;
 	public List<Service> getAll() throws IOException;
 }

@@ -13,6 +13,6 @@
 	<classpathentry kind="lib" path="lib/httpclient-cache-4.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/restz.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Restz"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

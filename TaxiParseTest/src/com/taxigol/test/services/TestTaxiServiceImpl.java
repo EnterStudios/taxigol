@@ -5,7 +5,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import com.fer.taxis.model.services.impl.TaxiServiceImpl;
-import com.restz.net.DefaultRestz;
+import com.taxigol.restz.DefaultRestz;
 
 public class TestTaxiServiceImpl extends TestCase {
 
