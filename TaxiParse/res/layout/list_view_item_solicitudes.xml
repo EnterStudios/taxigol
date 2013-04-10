@@ -6,6 +6,7 @@
     android:background="@drawable/list_selector" >
 
     <ImageButton
+        android:contentDescription="@string/app_name"
         android:id="@+id/btnConfirmar"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -21,14 +22,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:textIsSelectable="false"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/txtEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/txtDireccion"
-        android:text="Servicio de Taxi"
+        android:textIsSelectable="false"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

@@ -15,7 +15,7 @@ public class ServiciodeTaxiDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_serviciodetaxi_detail);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
