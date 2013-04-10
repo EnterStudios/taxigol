@@ -4,15 +4,17 @@ import android.app.Application;
 
 import com.fer.taxis.activities.AuthActivity.AuthHandler;
 import com.fer.taxis.activities.ConfirmacionActivity.ConfirmacionHandler;
-import com.fer.taxis.activities.PanicActivity.PanicHandler;
 import com.fer.taxis.activities.MapActivity;
+import com.fer.taxis.activities.PanicActivity.PanicHandler;
 import com.fer.taxis.controllers.AuthController;
-import com.fer.taxis.controllers.ServiceController;
-import com.fer.taxis.controllers.PositionController;
 import com.fer.taxis.controllers.PanicController;
+import com.fer.taxis.controllers.PositionController;
+import com.fer.taxis.controllers.ServiceController;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
+import com.parse.SaveCallback;
 
 public class App extends Application{
 
@@ -20,23 +22,29 @@ public class App extends Application{
 	private ServiceController confirmacionController;
 	private PanicController panicController;
 	private AuthController authController; 
-	
+	 
 	private ServiceFactory serviceFactory;
 	
+	private String installationId;
+	 
 	@Override
 	public void onCreate() {
 		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key)); 
-
-		// Save the current Installation to Parse.
-		ParseInstallation.getCurrentInstallation().saveInBackground();
-		PushService.subscribe(this, "", MapActivity.class);
+		ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException exception) {
+				installationId = ParseInstallation.getCurrentInstallation().getObjectId();
+			}
+		});		
+		PushService.subscribe(this, "Giants", MapActivity.class);
 		PushService.setDefaultPushCallback(this, MapActivity.class);
 		
 		serviceFactory = new ServiceFactory(getApplicationContext().getString(R.string.server_url));
-		authController = new AuthController(getApplicationContext());
+		authController = new AuthController(getApplicationContext(),serviceFactory.getTaxiService());
 		
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());
-		confirmacionController = new ServiceController(authController,getApplicationContext(), serviceFactory.getTaxiService());
+		confirmacionController = new ServiceController(authController,getApplicationContext(), serviceFactory.getTaxiServiceService());
 		panicController = new PanicController(authController,getApplicationContext(), serviceFactory.getPanicService());
 		
 	}

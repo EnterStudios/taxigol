@@ -26,5 +26,12 @@ public class TaxiServiceImpl extends AbstractService<Taxi> implements TaxiServic
 		String json = post.getContent();
 		return parser.parse(json);
 	}
+	
+	@Override
+	public Taxi auth(String parseInstallationId) throws IOException {
+		PostRequest post = client.post(baseUrl+"/"+resourceName+".json","installation_id",parseInstallationId);
+		String json = post.getContent();
+		return parser.parse(json);
+	}
 
 }

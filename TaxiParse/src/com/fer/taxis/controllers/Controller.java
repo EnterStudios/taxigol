@@ -1,10 +1,9 @@
 package com.fer.taxis.controllers;
 
-import com.taxigol.restz.async.Task;
-import com.taxigol.restz.async.TaskRunnable;
-import com.taxigol.restz.async.Task.FinishedHandler;
-
 import android.content.Context;
+
+import com.taxigol.restz.async.Task;
+import com.taxigol.restz.async.TaskFactory;
 
 public abstract class Controller {
 
@@ -14,8 +13,8 @@ public abstract class Controller {
 		this.context = context;
 	}
 	
-	public <T> void runAsync(TaskRunnable<T> task, FinishedHandler<T> handler){
-		Task.runAsync(task, handler);
+	public <T> void runAsync(Task<T> task){
+		TaskFactory.runAsync(task);
 	}
 
 }

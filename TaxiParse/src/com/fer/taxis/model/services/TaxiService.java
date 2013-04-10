@@ -8,4 +8,5 @@ public interface TaxiService {
 
 	public Taxi createTaxi() throws IOException;
 	public Taxi getTaxi(String placa);
+	public Taxi auth(String parseInstallationId) throws IOException;
 }

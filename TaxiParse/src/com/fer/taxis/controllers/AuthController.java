@@ -1,19 +1,19 @@
 package com.fer.taxis.controllers;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.fer.taxis.activities.AuthActivity.AuthHandler;
-import com.fer.taxis.activities.MapActivity;
 import com.fer.taxis.model.Taxi;
-import com.taxigol.restz.async.Task.FinishedHandler;
-import com.taxigol.restz.async.TaskRunnable;
+import com.fer.taxis.model.services.TaxiService;
+import com.parse.ParseInstallation;
+import com.taxigol.restz.async.Task;
 
 public class AuthController extends Controller implements AuthHandler  {
 
 	private String taxiId;
+	private TaxiService service;
 	
-	public AuthController(Context context) {
+	public AuthController(Context context, TaxiService service) {
 		super(context);
 		
 	}
@@ -24,28 +24,18 @@ public class AuthController extends Controller implements AuthHandler  {
 	
 	@Override
 	public void onLogin(String username, String password) {
-		runAsync(getAuthTast(), new FinishedHandler<Taxi>(){
-			@Override
-			public void onResult(Taxi result) {
-				taxiId = result.getId();
-				Intent i = new Intent(context, MapActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(i);
-			}
-			
-			
-		});
-	}
-
-	private TaskRunnable<Taxi> getAuthTast() {
-		return new TaskRunnable<Taxi>() {
+		runAsync(new Task<Taxi>() {
 			@Override
 			public Taxi execute() {
-				return new Taxi("1");
+				String parseId = ParseInstallation.getCurrentInstallation().getObjectId();
+				return service.auth(parseId);
 			}
-		};
+			@Override
+			public void onSuccess(Taxi result) {
+				taxiId = result.getId();
+			}
+		});
 	}
-	
 	
 
 }

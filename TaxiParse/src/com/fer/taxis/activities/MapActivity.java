@@ -6,7 +6,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +13,7 @@ import android.view.MenuItem;
 import com.fer.taxis.App;
 import com.fer.taxis.R;
 import com.fer.taxis.model.LocationReceiver.Handler;
+import com.fer.taxis.model.services.PanicService;
 import com.fer.taxis.views.widgets.Dialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -56,11 +56,13 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case R.id.menu_map:
-	        	
+	        	return true;
+	        case R.id.menu_panic:
+	        	startActivity(new Intent(this, PanicService.class));
 	            return true;
 	        case R.id.menu_services:
 	        	Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
-	        	NavUtils.navigateUpTo(this, i);
+	        	startActivity(i);
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
