@@ -1,19 +1,15 @@
 package com.fer.taxis.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ActionBar.TabListener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.MenuItem;
 
 import com.fer.taxis.App;
 import com.fer.taxis.R;
@@ -24,7 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MapActivity extends Activity implements OnItemClickListener, OnClickListener, Handler{
+public class MapActivity extends Activity implements OnClickListener, Handler{
 
 	private GoogleMap map;
 	private MapHandler handler;
@@ -41,7 +37,7 @@ public class MapActivity extends Activity implements OnItemClickListener, OnClic
 		
 		onLocationChanged(handler.getLocation());
 		
-		ActionBar actionBar = getActionBar();
+		
 	}
 	
 	@Override
@@ -56,11 +52,19 @@ public class MapActivity extends Activity implements OnItemClickListener, OnClic
 		return (App) getApplication();
 	}
 
-
 	@Override
-	public void onItemClick(AdapterView<?> adapter, View view, int i, long arg3) {
-		// TODO Auto-generated method stub
-		
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.menu_map:
+	        	
+	            return true;
+	        case R.id.menu_services:
+	        	Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
+	        	NavUtils.navigateUpTo(this, i);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	@Override

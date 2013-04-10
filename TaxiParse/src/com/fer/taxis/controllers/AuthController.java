@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.fer.taxis.activities.AuthActivity.AuthHandler;
 import com.fer.taxis.activities.MapActivity;
-import com.fer.taxis.activities.ServiciodeTaxiListActivity;
 import com.fer.taxis.model.Taxi;
 import com.taxigol.restz.async.Task.FinishedHandler;
 import com.taxigol.restz.async.TaskRunnable;
@@ -29,7 +28,7 @@ public class AuthController extends Controller implements AuthHandler  {
 			@Override
 			public void onResult(Taxi result) {
 				taxiId = result.getId();
-				Intent i = new Intent(context, ServiciodeTaxiListActivity.class);
+				Intent i = new Intent(context, MapActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(i);
 			}

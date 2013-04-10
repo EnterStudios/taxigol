@@ -156,7 +156,7 @@ containing a value of this type.
     }
     public static final class id {
         public static final int action_forgot_password=0x7f060017;
-        public static final int action_settings=0x7f060018;
+        public static final int action_settings=0x7f06001a;
         public static final int btnCancelar=0x7f06000f;
         public static final int btnConfirmar=0x7f06000e;
         public static final int btnPanic=0x7f060012;
@@ -167,6 +167,8 @@ containing a value of this type.
         public static final int login_status=0x7f060005;
         public static final int login_status_message=0x7f060006;
         public static final int map=0x7f060011;
+        public static final int menu_map=0x7f060018;
+        public static final int menu_services=0x7f060019;
         public static final int menu_settings=0x7f060016;
         public static final int none=0x7f060000;
         public static final int normal=0x7f060001;
