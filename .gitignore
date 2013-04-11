@@ -11,8 +11,20 @@
 # generated files
 bin/
 gen/
+#se eliminan los archivos autogenerados y los de propiedad del sistema de Restz
+
 Restz/bin/*
+Restz/.*
+Restz/project.properties
+
+#se eliminan los archivos autogenerados y los de propiedad del sistema de TaxiParse
 TaxiParse/bin/*
+TaxiParse/.*
+TaxiParse/project.properties
+
+#se eliminan los archivos autogenerados y los de propiedad del sistema de TaxiParseTest
+TaxiParseTest/.*
+TaxiParseTest/project.properties
 
 # Local configuration file (sdk path, etc)
 local.properties
