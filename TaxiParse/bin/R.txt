@@ -16,6 +16,7 @@ int dimen activity_horizontal_margin 0x7f070000
 int dimen activity_vertical_margin 0x7f070001
 int drawable accept_icon 0x7f020000
 int drawable arrow_right 0x7f020001
+int drawable background 0x7f02000f
 int drawable btn_panic 0x7f020002
 int drawable ic_launcher 0x7f020003
 int drawable list_selector 0x7f020004
@@ -27,7 +28,9 @@ int drawable pressed 0x7f020009
 int drawable primary_color 0x7f02000d
 int drawable semitransparent_white 0x7f02000c
 int drawable small_logo 0x7f02000a
+int drawable subtitle 0x7f020010
 int drawable taxi_logo 0x7f02000b
+<<<<<<< HEAD
 int id action_forgot_password 0x7f040017
 int id action_settings 0x7f040018
 int id btnCancelar 0x7f04000f
@@ -53,6 +56,44 @@ int id textView1 0x7f04000c
 int id txtDireccion 0x7f04000d
 int id txtLogin 0x7f040008
 int id txtPassword 0x7f040009
+=======
+int drawable text 0x7f020011
+int drawable title_color 0x7f02000e
+int id action_forgot_password 0x7f06001d
+int id action_settings 0x7f060021
+int id btnCancelar 0x7f06000f
+int id btnConfirmar 0x7f06000e
+int id btnPanic 0x7f060012
+int id hybrid 0x7f060004
+int id listViewSolicitudes 0x7f060010
+int id login 0x7f06000a
+int id login_form 0x7f060007
+int id login_status 0x7f060005
+int id login_status_message 0x7f060006
+int id map 0x7f060011
+int id menu_map 0x7f060020
+int id menu_panic 0x7f06001e
+int id menu_services 0x7f06001f
+int id menu_settings 0x7f06001c
+int id none 0x7f060000
+int id normal 0x7f060001
+int id satellite 0x7f060002
+int id serviciodetaxi_detail 0x7f06001b
+int id serviciodetaxi_detail_container 0x7f060013
+int id serviciodetaxi_list 0x7f06001a
+int id sign_in_button 0x7f06000b
+int id terrain 0x7f060003
+int id textView1 0x7f06000c
+int id textView2 0x7f060014
+int id textView3 0x7f060015
+int id textView4 0x7f060017
+int id textView5 0x7f060018
+int id textView7 0x7f060016
+int id txtDireccion 0x7f06000d
+int id txtEstado 0x7f060019
+int id txtLogin 0x7f060008
+int id txtPassword 0x7f060009
+>>>>>>> 4f765d928698b7b425f3b98c9cd178e2c62bced5
 int layout activity_auth 0x7f030000
 int layout activity_confirmacion 0x7f030001
 int layout activity_main 0x7f030002

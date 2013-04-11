@@ -2,6 +2,7 @@ package com.fer.taxis.views.widgets;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fer.taxis.R;
+import com.fer.taxis.activities.ServiciodeTaxiDetailActivity;
 import com.fer.taxis.model.Service;
 
 public class SolicitudesAdapter extends BaseAdapter {
@@ -37,7 +39,7 @@ public class SolicitudesAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View view, ViewGroup parent) {
+	public View getView(int position, View view, final ViewGroup parent) {
 		if (view == null) {
 
 			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -46,16 +48,20 @@ public class SolicitudesAdapter extends BaseAdapter {
 
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
-
-					return false;
+					
+					Intent intent = new Intent(parent.getContext(),ServiciodeTaxiDetailActivity.class);
+					parent.getContext().startActivity(intent);
+					return true;
 				}
 			});
 		}
 
 		String title = solicitudes.get(position).getAddress();
-
+		String estado = solicitudes.get(position).getState();
 		TextView txtTitle = (TextView)view.findViewById(R.id.txtDireccion);
 		txtTitle.setText(title);
+		TextView txtEstado = (TextView)view.findViewById(R.id.txtEstado);
+		txtEstado.setText(estado);
 
 		return view;
 	}

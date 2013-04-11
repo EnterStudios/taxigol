@@ -1,85 +1,51 @@
 package com.fer.taxis.activities;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import java.util.ArrayList;
 
 import com.fer.taxis.R;
-import com.fer.taxis.fragments.ServiciodeTaxiDetailFragment;
-import com.fer.taxis.fragments.ServiciodeTaxiListFragment;
+import com.fer.taxis.model.Service;
+import com.fer.taxis.model.services.TaxiServiceService.State;
+import com.fer.taxis.views.widgets.SolicitudesAdapter;
 
-/**
- * An activity representing a list of Servicios de Taxi. This activity has
- * different presentations for handset and tablet-size devices. On handsets, the
- * activity presents a list of items, which when touched, lead to a
- * {@link ServiciodeTaxiDetailActivity} representing item details. On tablets,
- * the activity presents the list of items and item details side-by-side using
- * two vertical panes.
- * <p>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link ServiciodeTaxiListFragment} and the item details (if present) is a
- * {@link ServiciodeTaxiDetailFragment}.
- * <p>
- * This activity also implements the required
- * {@link ServiciodeTaxiListFragment.Callbacks} interface to listen for item
- * selections.
- */
-public class ServiciodeTaxiListActivity extends FragmentActivity implements
-		ServiciodeTaxiListFragment.Callbacks {
+import android.app.ListActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
 
-	/**
-	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-	 * device.
-	 */
-	private boolean mTwoPane;
 
+public class ServiciodeTaxiListActivity extends ListActivity{
+
+	private SolicitudesAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_serviciodetaxi_list);
-
-		if (findViewById(R.id.serviciodetaxi_detail_container) != null) {
-			// The detail container view will be present only in the
-			// large-screen layouts (res/values-large and
-			// res/values-sw600dp). If this view is present, then the
-			// activity should be in two-pane mode.
-			mTwoPane = true;
-
-			// In two-pane mode, list items should be given the
-			// 'activated' state when touched.
-			((ServiciodeTaxiListFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.serviciodetaxi_list))
-					.setActivateOnItemClick(true);
-		}
-
-		// TODO: If exposing deep links into your app, handle intents here.
+		adapter = new SolicitudesAdapter(getSolicitudes());
+		setListAdapter(adapter);
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
-	/**
-	 * Callback method from {@link ServiciodeTaxiListFragment.Callbacks}
-	 * indicating that the item with the given ID was selected.
-	 */
+	private ArrayList<Service> getSolicitudes() {
+		ArrayList<Service> services = new ArrayList<Service>();
+		services.add(new Service(1, State.cancelado.toString(), "123", "calle 132 a # 19-43", "1"));
+		return services;
+	}
+	
 	@Override
-	public void onItemSelected(String id) {
-		if (mTwoPane) {
-			// In two-pane mode, show the detail view in this activity by
-			// adding or replacing the detail fragment using a
-			// fragment transaction.
-			Bundle arguments = new Bundle();
-			arguments.putString(ServiciodeTaxiDetailFragment.ARG_ITEM_ID, id);
-			ServiciodeTaxiDetailFragment fragment = new ServiciodeTaxiDetailFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.serviciodetaxi_detail_container, fragment)
-					.commit();
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			startActivity(new Intent(this, MapActivity.class));
+			break;
 
-		} else {
-			// In single-pane mode, simply start the detail activity
-			// for the selected item ID.
-			Intent detailIntent = new Intent(this,
-					ServiciodeTaxiDetailActivity.class);
-			detailIntent.putExtra(ServiciodeTaxiDetailFragment.ARG_ITEM_ID, id);
-			startActivity(detailIntent);
+		default:
+			break;
 		}
+		return super.onOptionsItemSelected(item);
 	}
+	
 }

@@ -1,32 +1,22 @@
 package com.taxigol.restz.async;
 
-import android.os.AsyncTask;
+/**
+ * Represents an Async task that will be run and it's response will be delivered some
+ * time in the future
+ * @author fhurtad
+ *
+ * @param <T>
+ */
+public interface Task<T> {
 
-public class Task<T> extends AsyncTask<TaskRunnable<T>, Integer, T> {
-
-	private FinishedHandler<T> handler;
-	
-	protected T doInBackground(TaskRunnable<T>... params) {
-		return params[0].execute();
-	};
-	
-	@SuppressWarnings("unchecked")
-	private void run(TaskRunnable<T> task, FinishedHandler<T> handler){
-		this.handler = handler;
-		execute(task);
-	}
-	
-	protected void onPostExecute(T result) {
-		handler.onResult(result);
-	};
-	
-	public interface FinishedHandler<T>{
-		void onResult(T result);
-	}
-	
-	public static <P> void runAsync(TaskRunnable<P> task, FinishedHandler<P> handler){
-		Task<P> asyncTask = new Task<P>();
-		asyncTask.run(task, handler);
-	}
-
+	/**
+	 * When this method is run, the actual task starts
+	 * @return the return object type
+	 */
+	public T execute() throws Exception;
+	/**
+	 * When the task finishes succesfully this method is run
+	 * @param result
+	 */
+	public void onSuccess(T result);
 }

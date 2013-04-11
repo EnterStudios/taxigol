@@ -1,12 +1,13 @@
 package com.fer.taxis.controllers;
 
-import java.io.IOException;
+import android.content.Context;
 
 import com.fer.taxis.activities.PanicActivity.PanicHandler;
 import com.fer.taxis.model.IdProvider;
+import com.fer.taxis.model.Panic;
 import com.fer.taxis.model.services.PanicService;
-
-import android.content.Context;
+import com.taxigol.restz.async.OnSuccess;
+import com.taxigol.restz.async.Task;
 
 public class PanicController extends Controller implements PanicHandler{
 
@@ -20,13 +21,16 @@ public class PanicController extends Controller implements PanicHandler{
 	}
 	
 	@Override
-	public void onPanicTouched() {
-		try {
-			service.createPanic(idProvider.getId());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void onPanicTouched(final OnSuccess<Void> panic) {
+		runAsync(new Task<Panic>() {
+			@Override
+			public Panic execute() throws Exception {
+				return service.createPanic(idProvider.getId());
+			}
+			public void onSuccess(Panic result) {
+				panic.onSuccess(null);
+			};
+		});
 	}
 	
 }

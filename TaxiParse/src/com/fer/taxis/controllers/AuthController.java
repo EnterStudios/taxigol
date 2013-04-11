@@ -1,22 +1,23 @@
 package com.fer.taxis.controllers;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.fer.taxis.activities.AuthActivity.AuthHandler;
-import com.fer.taxis.activities.MapActivity;
-import com.fer.taxis.activities.ServiciodeTaxiListActivity;
 import com.fer.taxis.model.Taxi;
-import com.taxigol.restz.async.Task.FinishedHandler;
-import com.taxigol.restz.async.TaskRunnable;
+import com.fer.taxis.model.services.TaxiService;
+import com.parse.ParseInstallation;
+import com.taxigol.restz.async.OnSuccess;
+import com.taxigol.restz.async.Task;
 
 public class AuthController extends Controller implements AuthHandler  {
 
 	private String taxiId;
+	private TaxiService service;
 	
-	public AuthController(Context context) {
+	public AuthController(Context context, TaxiService service) {
 		super(context);
-		
+		this.service = service;
+		taxiId = null;
 	}
 	
 	public String getId(){
@@ -24,29 +25,21 @@ public class AuthController extends Controller implements AuthHandler  {
 	}
 	
 	@Override
-	public void onLogin(String username, String password) {
-		runAsync(getAuthTast(), new FinishedHandler<Taxi>(){
+	public void onLogin(String username, String password, final OnSuccess<Void> success) {
+		runAsync(new Task<Taxi>() {
 			@Override
-			public void onResult(Taxi result) {
-				taxiId = result.getId();
-				Intent i = new Intent(context, ServiciodeTaxiListActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(i);
+			public Taxi execute() throws Exception{
+				String parseId = ParseInstallation.getCurrentInstallation().getObjectId();
+				return service.auth(parseId);
 			}
-			
-			
+			@Override
+			public void onSuccess(Taxi result) {
+				System.out.println("AUTH succesful:"+result);
+				taxiId = result.getId();
+				success.onSuccess(null);
+			}
 		});
 	}
-
-	private TaskRunnable<Taxi> getAuthTast() {
-		return new TaskRunnable<Taxi>() {
-			@Override
-			public Taxi execute() {
-				return new Taxi("1");
-			}
-		};
-	}
-	
 	
 
 }
