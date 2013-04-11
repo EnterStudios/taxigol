@@ -24,13 +24,13 @@ public class App extends Application{
 	private ServiceFactory serviceFactory;
 	 
 	@Override
-	public void onCreate() {
+	public void onCreate() {  
 		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key)); 
 		ParseInstallation.getCurrentInstallation().saveInBackground();		
 		PushService.subscribe(this, "Giants", MapActivity.class);
 		PushService.setDefaultPushCallback(this, MapActivity.class);
 		
-		serviceFactory = new ServiceFactory("http://gpsteleclub.herokuapp.com");
+		serviceFactory = new ServiceFactory("http://192.168.0.10:3000");
 		authController = new AuthController(getApplicationContext(),serviceFactory.getTaxiService());
 		
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());

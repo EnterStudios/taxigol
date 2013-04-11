@@ -17,7 +17,7 @@ public class AuthController extends Controller implements AuthHandler  {
 	public AuthController(Context context, TaxiService service) {
 		super(context);
 		this.service = service;
-		
+		taxiId = null;
 	}
 	
 	public String getId(){

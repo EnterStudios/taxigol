@@ -27,16 +27,18 @@ public class PositionController extends Controller implements Handler, MapHandle
 	
 	@Override
 	public void onLocationChanged(final Location location) {
-		runAsync(new Task<Position>() {
-			@Override
-			public Position execute() throws Exception {
-				return client.updatePosition(idProvider.getId(), location.getLatitude(), location.getLongitude());
-			}
-			@Override
-			public void onSuccess(Position result) {
-				System.out.println("Position updated");
-			}
-		});
+		if (idProvider.getId()!=null){
+			runAsync(new Task<Position>() {
+				@Override
+				public Position execute() throws Exception {
+					return client.updatePosition(idProvider.getId(), location.getLatitude(), location.getLongitude());
+				}
+				@Override
+				public void onSuccess(Position result) {
+					System.out.println("Position updated");
+				}
+			});
+		}
 	}
 	
 	@Override
