@@ -17,5 +17,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_serviciodetaxi_list">Servicios de Taxi</string>
     <string name="title_serviciodetaxi_detail">Servicio de Taxi Detail</string>
+    <string name="title_activity_create_map_object">Crear contenido</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

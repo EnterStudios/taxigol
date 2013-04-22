@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,14 +32,13 @@ import com.taxigol.taxi.model.MapObject;
 import com.taxigol.taxi.model.Service;
 import com.taxigol.taxi.views.widgets.Dialog;
 
-public class MapActivity extends Activity implements OnClickListener, Handler{
+public class MapActivity extends Activity implements OnClickListener, Handler, OnMapLongClickListener{
 
 	private GoogleMap map;
 	private MapHandler handler;
 
 	private Geocoder geoCoder;
 	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +52,8 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 		onLocationChanged(handler.getLocation());
 		
 		geoCoder = new Geocoder(this);
+		
+		map.setOnMapLongClickListener(this);
 	}
 
 	@Override
@@ -150,6 +152,24 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 	public interface MapHandler{
 		public void register(Handler locationHandler);
 		public Location getLocation();
+	}
+
+	@Override
+	public void onMapLongClick(LatLng point) {
+		
+		Dialog.showAccept("Agregar un objeto al mapa", "¿Desear agregar un objeto al mapa?", this, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				//startActivityForResult(ne, requestCode)
+			}
+		});
+		
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
 	}
 
 }

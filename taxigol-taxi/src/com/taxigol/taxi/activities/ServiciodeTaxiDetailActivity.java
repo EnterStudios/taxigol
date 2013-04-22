@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,17 +13,19 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.taxigol.restz.async.OnError;
 import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
 import com.taxigol.taxi.events.CancelServiceEvent;
+import com.taxigol.taxi.events.CompleteServiceEvent;
 import com.taxigol.taxi.events.FindServiceEvent;
 import com.taxigol.taxi.model.Service;
 import com.taxigol.taxi.views.widgets.Dialog;
 import com.taxigol.taxi.views.widgets.OnInputDialogOkClicked;
 
 
-public class ServiciodeTaxiDetailActivity extends Activity implements OnClickListener {
+public class ServiciodeTaxiDetailActivity extends Activity implements OnClickListener, OnInputDialogOkClicked {
 
 	public final static String EXTRA_SERVICE_ID = "service_id";
 
@@ -113,16 +116,34 @@ public class ServiciodeTaxiDetailActivity extends Activity implements OnClickLis
 			}));
 		}
 		else if (v.equals(findViewById(R.id.btnCumplido))){
-			Dialog.showInputDialog("Verificar el codigo", "Ingresa el código del servicio para verificarlo", this, new OnInputDialogOkClicked() {
-				
-				@Override
-				public void onClicked(String body) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
+			Dialog.showInputDialog("Verificar el codigo", "Ingresa el código del servicio para verificarlo", this, ServiciodeTaxiDetailActivity.this);
 		}
 	}
 
+	
+	/**
+	 * This method is executed when the input dialog is accepted.
+	 * @param body the input text
+	 */
+	@Override
+	public void onClicked(String body) {
+		Pair<String,String> data = new Pair<String,String>(serviceId,body.trim());
+		CompleteServiceEvent event = new CompleteServiceEvent(data, 
+				new OnSuccess<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				Toast.makeText(getApplicationContext(), "Codigo correcto", Toast.LENGTH_LONG).show();
+				finish();
+			}
+		}, new OnError() {
+			
+			@Override
+			public void onError(Throwable result) {
+				Toast.makeText(getApplicationContext(), "Error confirmando el codigo", Toast.LENGTH_LONG).show();
+				finish();
+			}
+		});
+		getApp().getEventBus().post(event);
+	}
 	
 }

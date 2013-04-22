@@ -75,9 +75,9 @@
                 <action android:name="com.fer.taxis.TAXI_SERVICE" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.taxigol.taxi.receivers.PanicReceiver">
-            <intent-filter >
-                <action android:name="com.fer.taxis.PANIC_SERVICE"/>
+        <receiver android:name="com.taxigol.taxi.receivers.PanicReceiver" >
+            <intent-filter>
+                <action android:name="com.fer.taxis.PANIC_SERVICE" />
             </intent-filter>
         </receiver>
 
@@ -96,6 +96,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ServiciodeTaxiListActivity" />
+        </activity>
+        <activity
+            android:name="com.taxigol.taxi.activities.CreateMapObjectActivity"
+            android:label="@string/title_activity_create_map_object" >
         </activity>
     </application>
 
