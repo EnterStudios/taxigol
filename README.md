@@ -1,3 +1,4 @@
+
 Repositorio fernandohur/taxigol
 
 Hay 3 proyectos
@@ -64,6 +65,12 @@ En este momento hay
 	- servicio de taxi detail
 	- servicio de taxi panic
 	- solicitud confirmada
+
+
+
+
+
+
 
 
 
