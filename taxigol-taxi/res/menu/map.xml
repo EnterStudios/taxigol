@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
     
-    <item android:id="@+id/menu_panic"
-          android:icon="@drawable/btn_panic"
-          android:title="Panico"
-          android:showAsAction="ifRoom|withText" />
-    
     <item android:id="@+id/menu_services"
           android:icon="@drawable/map_user"
           android:title="Servicios"
