@@ -64,6 +64,11 @@ public class ServiceController extends Controller implements ServiceHandler{
 		});
 	}
 	
+	/**
+	 * Upon receiving a ConfirmServiceEvent, take's the serviceId and updates it
+	 * as <code>confirmado</code> in the server
+	 * @param event
+	 */
 	@Subscribe
 	public void confirmService(ConfirmServiceEvent event) {
 		final String serviceId = event.getData();
@@ -77,6 +82,11 @@ public class ServiceController extends Controller implements ServiceHandler{
 	}
 	
 	@Subscribe
+	/**
+	 * Upon receiving a ConfirmServiceEvent, take's the serviceId and updates it
+	 * as <code>confirmado</code> in the server
+	 * @param event
+	 */
 	public void completeService(CompleteServiceEvent event){
 		final String serviceId = event.getData().first;
 		final String verificationCode = event.getData().second;
@@ -90,6 +100,13 @@ public class ServiceController extends Controller implements ServiceHandler{
 		});
 	}
 
+	/**
+	 * Updates the list of services in the controller.
+	 * <ol>
+	 * 	<li>Makes a GET to the server returning all the Services</li>
+	 * 	<li>Updates the <code>services</code> variable</li>
+	 * </ol>
+	 */
 	@Override
 	public void getServices(final AsyncCallback<List<Service>> cb) {
 		runAsync(new DefaultTask<List<Service>>() {
@@ -105,6 +122,12 @@ public class ServiceController extends Controller implements ServiceHandler{
 		});
 	}
 	
+	/**
+	 * This method is executed when a taxi service request is sent and received.
+	 * The method takes the ServiceReceivedEvent's data as the serviceId, loads
+	 * the service with the given id and displays a <code>ConfirmacionActivity</code>
+	 * @param event
+	 */
 	@Subscribe
 	public void onServiceReceived(ServiceReceivedEvent event){
 		final String serviceId = event.getData();

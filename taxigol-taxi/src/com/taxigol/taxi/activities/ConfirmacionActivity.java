@@ -86,12 +86,4 @@ public class ConfirmacionActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public interface ConfirmacionHandler{
-
-		public void onConfirmar(String servicioId);
-
-	}
-
-
-
 }
