@@ -13,10 +13,9 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.taxigol.restz.async.OnError;
-import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.events.CancelServiceEvent;
 import com.taxigol.taxi.events.CompleteServiceEvent;
 import com.taxigol.taxi.events.FindServiceEvent;
@@ -68,7 +67,7 @@ public class ServiciodeTaxiDetailActivity extends Activity implements OnClickLis
 		super.onResume();
 		dialog.show();
 		serviceId = getIntent().getStringExtra(EXTRA_SERVICE_ID);
-		getApp().getEventBus().post(new FindServiceEvent(serviceId, new OnSuccess<Service>() {
+		getApp().getEventBus().post(new FindServiceEvent(serviceId, new AsyncCallback<Service>() {
 			@Override
 			public void onSuccess(Service result) {
 				System.out.println("RESULT:"+result);
@@ -93,9 +92,6 @@ public class ServiciodeTaxiDetailActivity extends Activity implements OnClickLis
 		case R.id.menu_map:
 			startActivity(new Intent(this, MapActivity.class));
 			return true;
-		case R.id.menu_panic:
-			startActivity(new Intent(this, PanicActivity.class));
-			return true;
 		case R.id.menu_services:
 			Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
 			startActivity(i);
@@ -108,7 +104,7 @@ public class ServiciodeTaxiDetailActivity extends Activity implements OnClickLis
 	@Override
 	public void onClick(View v) {
 		if (v.equals(findViewById(R.id.btnCancelar))){
-			getApp().getEventBus().post(new CancelServiceEvent(serviceId, new OnSuccess<Void>() {
+			getApp().getEventBus().post(new CancelServiceEvent(serviceId, new AsyncCallback<Void>() {
 				@Override
 				public void onSuccess(Void result) {
 					Toast.makeText(ServiciodeTaxiDetailActivity.this, "Servicio cancelado exitosamente", Toast.LENGTH_LONG).show();
@@ -129,16 +125,13 @@ public class ServiciodeTaxiDetailActivity extends Activity implements OnClickLis
 	public void onClicked(String body) {
 		Pair<String,String> data = new Pair<String,String>(serviceId,body.trim());
 		CompleteServiceEvent event = new CompleteServiceEvent(data, 
-				new OnSuccess<Void>() {
+				new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
 				Toast.makeText(getApplicationContext(), "Codigo correcto", Toast.LENGTH_LONG).show();
 				finish();
 			}
-		}, new OnError() {
-			
-			@Override
-			public void onError(Throwable result) {
+			public void onFailure(Throwable throwable){
 				Toast.makeText(getApplicationContext(), "Error confirmando el codigo", Toast.LENGTH_LONG).show();
 				finish();
 			}

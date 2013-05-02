@@ -3,8 +3,8 @@ package com.taxigol.taxi.controllers;
 import android.content.Context;
 import android.location.Location;
 
-import com.taxigol.restz.async.Task;
 import com.taxigol.taxi.activities.MapActivity.MapHandler;
+import com.taxigol.taxi.controllers.async.DefaultTask;
 import com.taxigol.taxi.model.IdProvider;
 import com.taxigol.taxi.model.LocationReceiver;
 import com.taxigol.taxi.model.LocationReceiver.Handler;
@@ -28,7 +28,7 @@ public class PositionController extends Controller implements Handler, MapHandle
 	@Override
 	public void onLocationChanged(final Location location) {
 		if (idProvider.getId()!=null){
-			runAsync(new Task<Position>() {
+			runAsync(new DefaultTask<Position>() {
 				@Override
 				public Position execute() throws Exception {
 					return client.updatePosition(idProvider.getId(), location.getLatitude(), location.getLongitude());

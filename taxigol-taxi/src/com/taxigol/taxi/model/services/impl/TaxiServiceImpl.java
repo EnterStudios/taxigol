@@ -1,9 +1,7 @@
 package com.taxigol.taxi.model.services.impl;
 
-import java.io.IOException;
+import co.fernandohur.restz.Restz;
 
-import com.taxigol.restz.Restz;
-import com.taxigol.restz.requests.PostRequest;
 import com.taxigol.taxi.model.Taxi;
 import com.taxigol.taxi.model.services.TaxiService;
 import com.taxigol.taxi.model.services.parsers.TaxiJsonParser;
@@ -21,10 +19,9 @@ public class TaxiServiceImpl extends AbstractService<Taxi> implements TaxiServic
 
 	
 	@Override
-	public Taxi auth(String parseInstallationId) throws IOException {
-		PostRequest post = client.post(baseUrl+"/"+resourceName+"/auth.json","installation_id",parseInstallationId);
-		String json = post.getContent();
-		return parser.parse(json);
+	public Taxi auth(String parseInstallationId) throws Exception {
+		Taxi taxi = client.post(baseUrl+"/"+resourceName+"/auth.json", Taxi.class, "installation_id",parseInstallationId);
+		return taxi;
 	}
 
 }

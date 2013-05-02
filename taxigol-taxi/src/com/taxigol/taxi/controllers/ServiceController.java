@@ -6,9 +6,10 @@ import java.util.List;
 import android.content.Context;
 
 import com.google.common.eventbus.Subscribe;
-import com.taxigol.restz.async.OnSuccess;
-import com.taxigol.restz.async.Task;
 import com.taxigol.taxi.activities.ServiciodeTaxiListActivity.ServiceHandler;
+import com.taxigol.taxi.controllers.async.CallbackEventTask;
+import com.taxigol.taxi.controllers.async.DefaultTask;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.events.CancelServiceEvent;
 import com.taxigol.taxi.events.CompleteServiceEvent;
 import com.taxigol.taxi.events.ConfirmServiceEvent;
@@ -86,8 +87,8 @@ public class ServiceController extends Controller implements ServiceHandler{
 		});
 	}
 
-	public void getNewService(final String idServicio, final OnSuccess<Service> onSuccess) {
-		runAsync(new Task<Service>() {
+	public void getNewService(final String idServicio, final AsyncCallback<Service> onSuccess) {
+		runAsync(new DefaultTask<Service>() {
 			@Override
 			public Service execute() throws Exception {
 				return client.get(idServicio);
@@ -99,8 +100,8 @@ public class ServiceController extends Controller implements ServiceHandler{
 	}
 
 	@Override
-	public void getServices(final OnSuccess<List<Service>> cb) {
-		runAsync(new Task<List<Service>>() {
+	public void getServices(final AsyncCallback<List<Service>> cb) {
+		runAsync(new DefaultTask<List<Service>>() {
 			@Override
 			public List<Service> execute() throws Exception {
 				return client.getAll(idProvider.getId()); 

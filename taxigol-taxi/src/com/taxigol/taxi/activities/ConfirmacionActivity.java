@@ -10,9 +10,9 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.events.ConfirmServiceEvent;
 import com.taxigol.taxi.views.widgets.Dialog;
 
@@ -47,9 +47,6 @@ public class ConfirmacionActivity extends Activity implements OnClickListener {
 	        case R.id.menu_map:
 	        	startActivity(new Intent(this, MapActivity.class));
 	            return true;
-	        case R.id.menu_panic:
-	        	startActivity(new Intent(this, PanicActivity.class));
-	            return true;
 	        case R.id.menu_services:
 	        	Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
 	        	startActivity(i);
@@ -77,7 +74,7 @@ public class ConfirmacionActivity extends Activity implements OnClickListener {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					finish();
-					getApp().getEventBus().post(new ConfirmServiceEvent(servicioId, new OnSuccess<Void>() {
+					getApp().getEventBus().post(new ConfirmServiceEvent(servicioId, new AsyncCallback<Void>() {
 						@Override
 						public void onSuccess(Void result) {
 

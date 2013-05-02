@@ -3,9 +3,9 @@ package com.taxigol.taxi.controllers;
 import android.content.Context;
 
 import com.parse.ParseInstallation;
-import com.taxigol.restz.async.OnSuccess;
-import com.taxigol.restz.async.Task;
 import com.taxigol.taxi.activities.AuthActivity.AuthHandler;
+import com.taxigol.taxi.controllers.async.DefaultTask;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.model.Taxi;
 import com.taxigol.taxi.model.services.TaxiService;
 
@@ -25,8 +25,8 @@ public class AuthController extends Controller implements AuthHandler  {
 	}
 	
 	@Override
-	public void onLogin(String username, String password, final OnSuccess<Void> success) {
-		runAsync(new Task<Taxi>() {
+	public void onLogin(String username, String password, final AsyncCallback<Void> success) {
+		runAsync(new DefaultTask<Taxi>() {
 			@Override
 			public Taxi execute() throws Exception{
 				System.out.println("Apptempting to log in");

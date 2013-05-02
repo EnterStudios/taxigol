@@ -1,8 +1,5 @@
 package com.taxigol.taxi.events;
 
-import com.taxigol.restz.async.OnError;
-import com.taxigol.restz.async.OnSuccess;
-
 import android.util.Pair;
 
 public class CompleteServiceEvent extends CallBackEvent<Void, Pair<String, String>>{
@@ -14,8 +11,8 @@ public class CompleteServiceEvent extends CallBackEvent<Void, Pair<String, Strin
 	 * @param onError
 	 */
 	public CompleteServiceEvent(Pair<String, String> data,
-			OnSuccess<Void> onSuccess, OnError onError) {
-		super(data, onSuccess, onError);
+			AsyncCallback<Void> onSuccess) {
+		super(data, onSuccess);
 		
 	}
 

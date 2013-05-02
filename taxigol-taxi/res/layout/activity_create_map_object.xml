@@ -28,21 +28,22 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Spinner
-        android:id="@+id/spinner1"
+        android:id="@+id/spinnerMapObjects"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
+        android:layout_above="@+id/btnSend"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView2" />
+        android:layout_below="@+id/textView2"
+        android:entries="@array/map_objects" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spinner1"
+        android:layout_alignLeft="@+id/spinnerMapObjects"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/spinner1"
+        android:layout_alignRight="@+id/spinnerMapObjects"
         android:text="Crear" />
 
 </RelativeLayout>

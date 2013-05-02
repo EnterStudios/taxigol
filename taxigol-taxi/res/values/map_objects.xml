@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ 
+    <string-array name="map_objects">
+        <item>hueco</item>
+        <item>camara</item>
+        <item>accidente</item>
+        <item>gasolina</item>
+        <item>trancon</item>
+    </string-array>
+ 
+</resources>

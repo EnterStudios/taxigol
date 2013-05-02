@@ -17,22 +17,19 @@ import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
-import com.taxigol.taxi.events.GetAllMapObjectsEvent;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.events.GetAllServicesEvent;
 import com.taxigol.taxi.model.LocationReceiver.Handler;
-import com.taxigol.taxi.model.MapObject;
 import com.taxigol.taxi.model.Service;
 import com.taxigol.taxi.views.widgets.Dialog;
 
-public class MapActivity extends Activity implements OnClickListener, Handler, OnMapLongClickListener{
+public class MapActivity extends Activity implements OnClickListener, Handler{
 
 	private GoogleMap map;
 	private MapHandler handler;
@@ -52,28 +49,13 @@ public class MapActivity extends Activity implements OnClickListener, Handler, O
 		onLocationChanged(handler.getLocation());
 		
 		geoCoder = new Geocoder(this);
-		
-		map.setOnMapLongClickListener(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getApp().getEventBus().post(new GetAllMapObjectsEvent(new OnSuccess<List<MapObject>>() {
-
-			@Override
-			public void onSuccess(List<MapObject> result) {
-				map.clear();
-				for (MapObject mapObject : result) {
-					MarkerOptions options = new MarkerOptions();
-					options.position(new LatLng(mapObject.getLatitude(), mapObject.getLongitude()));
-					options.icon(BitmapDescriptorFactory.fromResource(mapObject.getIconResource()));
-					map.addMarker(options);
-				}
-			}
-		}));
 		
-		getApp().getEventBus().post(new GetAllServicesEvent(new OnSuccess<List<Service>>() {
+		getApp().getEventBus().post(new GetAllServicesEvent(new AsyncCallback<List<Service>>() {
 			@Override
 			public void onSuccess(List<Service> result) {
 				System.out.println("Services returned: "+result);
@@ -114,9 +96,6 @@ public class MapActivity extends Activity implements OnClickListener, Handler, O
 		switch (item.getItemId()) {
 		case R.id.menu_map:
 			return true;
-		case R.id.menu_panic:
-			startActivity(new Intent(this, PanicActivity.class));
-			return true;
 		case R.id.menu_services:
 			Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
 			startActivity(i);
@@ -154,22 +133,6 @@ public class MapActivity extends Activity implements OnClickListener, Handler, O
 		public Location getLocation();
 	}
 
-	@Override
-	public void onMapLongClick(LatLng point) {
-		
-		Dialog.showAccept("Agregar un objeto al mapa", "¿Desear agregar un objeto al mapa?", this, new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				//startActivityForResult(ne, requestCode)
-			}
-		});
-		
-	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-	}
 
 }

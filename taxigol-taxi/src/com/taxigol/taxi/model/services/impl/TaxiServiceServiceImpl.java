@@ -1,14 +1,11 @@
 package com.taxigol.taxi.model.services.impl;
 
-import java.io.IOException;
-import com.taxigol.taxi.model.State;
 import java.util.List;
 
-import com.taxigol.restz.Restz;
-import com.taxigol.restz.requests.GetRequest;
-import com.taxigol.restz.requests.PostRequest;
-import com.taxigol.restz.requests.PutRequest;
+import co.fernandohur.restz.Restz;
+
 import com.taxigol.taxi.model.Service;
+import com.taxigol.taxi.model.State;
 import com.taxigol.taxi.model.services.TaxiServiceService;
 import com.taxigol.taxi.model.services.parsers.ServiceJsonParser;
 
@@ -17,44 +14,33 @@ TaxiServiceService {
 
 	public TaxiServiceServiceImpl(Restz client,String baseUrl) {
 		super(baseUrl, "services", client, new ServiceJsonParser());
+		client.setParser(parser);
 	}
 
 	@Override
-	public Service create(String addess, String verificationCode) throws IOException {
-		PostRequest post = client.post(baseUrl+"/"+resourceName+".json","address",addess,"verification_code",verificationCode);
-		String json = post.getContent();
-		return parser.parse(json);
-
+	public Service create(String addess, String verificationCode) throws Exception {
+		if (addess.contains("#")){
+			addess.replace("#", "No.");
+		}
+		return client.post(baseUrl+"/"+resourceName+".json",parser.getType(),"address",addess,"verification_code",verificationCode);
 	}
 
 	@Override
-	public void confirmarServicio(String serviceId, String taxiId)
-			throws IOException {
-		PutRequest put = 
-				client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json","state", State.confirmado.toString(), "taxi_id", taxiId);
-		String json = put.getContent();
-		parser.throwIfError(json);
+	public void confirmarServicio(String serviceId, String taxiId) throws Exception{
+		client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.confirmado.toString(), "taxi_id", taxiId);
 	}
 	
-	public void cumplirServicio(String serviceId, String taxiId, String verificationCode) throws IOException{
-		PutRequest put = 
-				client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json","state", State.cumplido.toString(), "taxi_id", taxiId, "verification_code", verificationCode);
-		String json = put.getContent();
-		parser.throwIfError(json);
+	public void cumplirServicio(String serviceId, String taxiId, String verificationCode) throws Exception{
+		client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.cumplido.toString(), "taxi_id", taxiId, "verification_code", verificationCode);
 	}
 	
 	@Override
-	public List<Service> getAll(String taxiId) throws IOException {
-		GetRequest get = client.get(baseUrl+"/"+resourceName+".json", "taxi_id",taxiId);
-		String json = get.getContent();
-		return parser.parseList(json);
+	public List<Service> getAll(String taxiId) throws Exception {
+		return client.get(baseUrl+"/"+resourceName+".json",parser.getListType(), "taxi_id",taxiId);
 	}
 
-	public void cancelarServicio(String serviceId, String taxiId) throws IOException {
-		PutRequest put = 
-				client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json","state", State.cancelado.toString(), "taxi_id", taxiId);
-		String json = put.getContent();
-		parser.throwIfError(json);
+	public void cancelarServicio(String serviceId, String taxiId) throws Exception {
+		client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.cancelado.toString(), "taxi_id", taxiId);
 	}
 	
 }

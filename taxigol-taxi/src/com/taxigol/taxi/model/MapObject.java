@@ -4,7 +4,7 @@ import com.taxigol.taxi.R;
 
 public class MapObject {
 
-	public enum Category{hueco, accidente, gasolina, trancon}
+	public enum Category{hueco, accidente, gasolina, trancon, camara}
 	
 	private double latitude;
 	private double longitude;
@@ -54,6 +54,9 @@ public class MapObject {
 		}
 		else if (cat.equals(Category.gasolina)){
 			return R.drawable.map_gas_stations;
+		}
+		else if(cat.equals(Category.camara)){
+			return R.drawable.map_camera;
 		}
 		throw new IllegalArgumentException("Unrecognized category '"+category+"'");
 	}

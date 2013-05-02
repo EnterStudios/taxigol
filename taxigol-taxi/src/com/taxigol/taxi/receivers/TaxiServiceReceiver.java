@@ -7,9 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.activities.ConfirmacionActivity;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.model.Service;
 
 public class TaxiServiceReceiver extends BroadcastReceiver {
@@ -36,7 +36,7 @@ public class TaxiServiceReceiver extends BroadcastReceiver {
 			System.out.println("Received ID:"+idServicio);
 			App app = (App)context.getApplicationContext(); 
 			if (app.getAuthHandler().getId()!=null){
-				app.getServiceController().getNewService(idServicio, new OnSuccess<Service>() {
+				app.getServiceController().getNewService(idServicio, new AsyncCallback<Service>() {
 
 					@Override
 					public void onSuccess(Service result) {

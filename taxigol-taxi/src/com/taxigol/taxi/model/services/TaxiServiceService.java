@@ -1,6 +1,5 @@
 package com.taxigol.taxi.model.services;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.taxigol.taxi.model.Service;
@@ -13,60 +12,60 @@ public interface TaxiServiceService extends IService<Service>{
 	 * @param address
 	 * @param verificationCode
 	 * @return the service created
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public Service create(String address, String verificationCode) throws IOException;
+	public Service create(String address, String verificationCode) throws Exception;
 		
 	/**
 	 * Deletes all the services
 	 * Note: does not work in production
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void deleteAll() throws IOException;
+	public void deleteAll() throws Exception;
 	
 	/**
 	 * Returns all the services
 	 * @return
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public List<Service> getAll() throws IOException;
+	public List<Service> getAll() throws Exception;
 	
 	/**
 	 * Returns a Service given its ID
 	 * @param id
 	 * @return
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public Service get(String id) throws IOException;
+	public Service get(String id) throws Exception;
 	
 	/**
 	 * Marca un servicio como confirmado
 	 * @param serviceId
 	 * @param taxiId
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void confirmarServicio(String serviceId, String taxiId) throws IOException;
+	public void confirmarServicio(String serviceId, String taxiId) throws Exception;
 	/**
 	 * Marca un servicio como cumplido
 	 * @param serviceId
 	 * @param taxiId
 	 * @param verificationCode
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void cumplirServicio(String serviceId, String taxiId, String verificationCode) throws IOException;
+	public void cumplirServicio(String serviceId, String taxiId, String verificationCode) throws Exception;
 	/**
 	 * 
 	 * @param taxiId
 	 * @return returns a list of all the services confirmed by the taxi
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public List<Service> getAll(String taxiId) throws IOException;
+	public List<Service> getAll(String taxiId) throws Exception;
 	
 	/**
 	 * Cancels a service
 	 * @param serviceId
 	 * @param taxiId
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void cancelarServicio(String serviceId, String taxiId) throws IOException;
+	public void cancelarServicio(String serviceId, String taxiId) throws Exception;
 }

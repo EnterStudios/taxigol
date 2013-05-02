@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.model.IdProvider;
 import com.taxigol.taxi.views.widgets.Dialog;
 
@@ -52,7 +52,7 @@ public class AuthActivity extends Activity implements OnClickListener{
 		dialog = Dialog.showMessage("Autenticando", "Autenticando tu usuario y contrase�a", this);
 		String username = txtLogin.getText().toString();
 		String password = txtPass.getText().toString();
-		handler.onLogin(username,password, new OnSuccess<Void>(){
+		handler.onLogin(username,password, new AsyncCallback<Void>(){
 			@Override
 			public void onSuccess(Void result) {
 				Intent i = new Intent(AuthActivity.this, MapActivity.class);
@@ -87,6 +87,6 @@ public class AuthActivity extends Activity implements OnClickListener{
 	}
 
 	public interface AuthHandler extends IdProvider{
-		public void onLogin(String username, String password, OnSuccess<Void> callback);
+		public void onLogin(String username, String password, AsyncCallback<Void> callback);
 	}
 }

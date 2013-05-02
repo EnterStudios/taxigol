@@ -2,8 +2,8 @@ package com.taxigol.taxi.model.services.parsers;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+
+import co.fernandohur.restz.parsers.GsonParser;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -11,12 +11,12 @@ import com.google.gson.JsonObject;
 import com.taxigol.taxi.model.ServerError;
 
 
-public abstract class AbstractParser<T> implements JsonParser<T> {
-
-
-	protected Gson gson;
+public abstract class AbstractParser<T> extends GsonParser {
+	
+	private Gson gson;
 	
 	public AbstractParser() {
+		super(new Gson());
 		gson = new Gson();
 	}
 	
@@ -34,6 +34,14 @@ public abstract class AbstractParser<T> implements JsonParser<T> {
 		
 	}
 	
+	@Override
+	public String getError(String json, Type type) {
+		if (isError(json)){
+			return ""+json;
+		}
+		return null;
+	}
+	
 	public void throwIfError(String json) throws IOException
 	{
 		if (isError(json)){
@@ -41,22 +49,11 @@ public abstract class AbstractParser<T> implements JsonParser<T> {
 			throw new IOException(error.getError()+": "+error.getMessage());
 		}
 	}
-	
-	@Override
-	public T parse(String json) throws IOException {
-		return gson.fromJson(json, getType());
-	}
+
 	
 	public abstract Class<T> getType();
 	public abstract Type getListType();
-	
-	@Override
-	public List<T> parseList(String json) throws IOException {
-		throwIfError(json);
-		
-		List<T> result =  gson.fromJson(json, getListType());
-		return result==null?new ArrayList<T>():result;
-	}
+
 	
 	
 }

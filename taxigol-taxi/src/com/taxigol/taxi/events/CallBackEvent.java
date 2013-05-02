@@ -1,38 +1,26 @@
 package com.taxigol.taxi.events;
 
-import com.taxigol.restz.async.OnError;
-import com.taxigol.restz.async.OnSuccess;
 
 public abstract class CallBackEvent<T,D> {
 
-	private OnSuccess<T> onSuccess;
-	private OnError onError;
+	private AsyncCallback<T> callBack;
 	private D data;	
 	
-	public CallBackEvent(D data, OnSuccess<T> onSuccess) {
-		this.onSuccess = onSuccess;
+	public CallBackEvent(D data, AsyncCallback<T> cb) {
+		this.callBack = cb;
 		this.data = data;
-		onError = new OnError() {
-			
-			@Override
-			public void onError(Throwable result) {
-				result.printStackTrace();
-			}
-		};
 	}
 	
-	public CallBackEvent(D data, OnSuccess<T> onSuccess, OnError onError){
-		this.onError = onError;
-		this.data = data;
-		this.onSuccess = onSuccess;
+	public void onSuccess(T result){
+		callBack.onSuccess(result);
 	}
 	
 	public void onError(Throwable error){
-		onError.onError(error);
+		callBack.onFailure(error);
 	}
 	
-	public OnSuccess<T> getCb() {
-		return onSuccess;
+	public AsyncCallback<T> getCb() {
+		return callBack;
 	}
 	
 	public D getData(){

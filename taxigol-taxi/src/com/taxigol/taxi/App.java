@@ -8,10 +8,7 @@ import com.parse.ParseInstallation;
 import com.parse.PushService;
 import com.taxigol.taxi.activities.AuthActivity.AuthHandler;
 import com.taxigol.taxi.activities.MapActivity;
-import com.taxigol.taxi.activities.PanicActivity.PanicHandler;
 import com.taxigol.taxi.controllers.AuthController;
-import com.taxigol.taxi.controllers.MapObjectController;
-import com.taxigol.taxi.controllers.PanicController;
 import com.taxigol.taxi.controllers.PositionController;
 import com.taxigol.taxi.controllers.ServiceController;
 
@@ -19,9 +16,7 @@ public class App extends Application{
 
 	private PositionController locationController;
 	private ServiceController servicesController;
-	private PanicController panicController;
-	private AuthController authController; 
-	private MapObjectController mapObjectController;
+	private AuthController authController;
 	 
 	private ServiceFactory serviceFactory;
 	
@@ -42,12 +37,9 @@ public class App extends Application{
 		authController = new AuthController(getApplicationContext(),serviceFactory.getTaxiService());
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());
 		servicesController = new ServiceController(authController,getApplicationContext(), serviceFactory.getTaxiServiceService());
-		panicController = new PanicController(authController,getApplicationContext(), serviceFactory.getPanicService());
-		mapObjectController = new MapObjectController(getApplicationContext(), serviceFactory.getMapObjectsService());
 		
 		//Register buses
 		bus.register(servicesController);
-		bus.register(mapObjectController);
 	}
 	
 	public PositionController getLocationController() {
@@ -56,10 +48,6 @@ public class App extends Application{
 
 	public ServiceController getServiceController() {
 		return servicesController;
-	}
-	
-	public PanicHandler getPanicHandler(){
-		return panicController;
 	}
 
 	public AuthHandler getAuthHandler() {

@@ -1,9 +1,7 @@
 package com.taxigol.taxi.model.services.impl;
 
-import java.io.IOException;
+import co.fernandohur.restz.Restz;
 
-import com.taxigol.restz.Restz;
-import com.taxigol.restz.requests.PostRequest;
 import com.taxigol.taxi.model.Position;
 import com.taxigol.taxi.model.services.PositionService;
 import com.taxigol.taxi.model.services.parsers.PositionJsonParser;
@@ -19,10 +17,8 @@ public class PositionServiceImpl extends AbstractService<Position> implements Po
 	}
 	
 	@Override
-	public Position updatePosition(String taxiId, double latitude, double longitude) throws IOException {
-		PostRequest post = client.post(baseUrl+"/positions.json", "taxi_id",taxiId,"latitude",""+latitude,"longitude",""+longitude);
-		String json = post.getContent();
-		return parser.parse(json);
+	public Position updatePosition(String taxiId, double latitude, double longitude) throws Exception {
+		return client.post(baseUrl+"/positions.json",parser.getType(), "taxi_id",taxiId,"latitude",""+latitude,"longitude",""+longitude);
 	}
 
 

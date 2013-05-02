@@ -10,9 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.taxigol.restz.async.OnSuccess;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
+import com.taxigol.taxi.events.AsyncCallback;
 import com.taxigol.taxi.model.Service;
 import com.taxigol.taxi.views.widgets.Dialog;
 import com.taxigol.taxi.views.widgets.SolicitudesAdapter;
@@ -51,7 +51,7 @@ public class ServiciodeTaxiListActivity extends ListActivity{
 	protected void onResume() {
 		super.onResume();
 		dialog.show();
-		handler.getServices(new OnSuccess<List<Service>>() {
+		handler.getServices(new AsyncCallback<List<Service>>() {
 			@Override
 			public void onSuccess(List<Service> result) {
 				System.out.println(result);
@@ -79,9 +79,6 @@ public class ServiciodeTaxiListActivity extends ListActivity{
 	        case R.id.menu_map:
 	        	startActivity(new Intent(this, MapActivity.class));
 	            return true;
-	        case R.id.menu_panic:
-	        	startActivity(new Intent(this, PanicActivity.class));
-	            return true;
 	        case R.id.menu_services:
 	        	Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
 	        	startActivity(i);
@@ -92,7 +89,7 @@ public class ServiciodeTaxiListActivity extends ListActivity{
 	}
 	
 	public interface ServiceHandler{
-		public void getServices(OnSuccess<List<Service>> servicios);
+		public void getServices(AsyncCallback<List<Service>> servicios);
 	}
 	
 }
