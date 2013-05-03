@@ -11,6 +11,7 @@ import com.taxigol.taxi.activities.MapActivity;
 import com.taxigol.taxi.controllers.AuthController;
 import com.taxigol.taxi.controllers.PositionController;
 import com.taxigol.taxi.controllers.ServiceController;
+import com.taxigol.taxi.model.MessageReceiver;
 
 public class App extends Application{
 
@@ -21,6 +22,8 @@ public class App extends Application{
 	private ServiceFactory serviceFactory;
 	
 	private EventBus bus;
+	
+	private MessageReceiver messageReceiver;
 	 
 	@Override
 	public void onCreate() {  
@@ -40,6 +43,9 @@ public class App extends Application{
 		
 		//Register buses
 		bus.register(servicesController);
+		
+		messageReceiver = new MessageReceiver(getEventBus());
+		
 	}
 	
 	public PositionController getLocationController() {

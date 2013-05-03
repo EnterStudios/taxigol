@@ -39,6 +39,8 @@ public class AuthActivity extends Activity implements OnClickListener{
 		txtLogin = (TextView)findViewById(R.id.txtPassword);
 				
 		this.handler = getApp().getAuthHandler();
+		
+		
 	}
 	
 	private App getApp() {

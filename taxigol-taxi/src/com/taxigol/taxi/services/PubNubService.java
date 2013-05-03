@@ -1,8 +1,5 @@
 package com.taxigol.taxi.services;
 
-import com.taxigol.taxi.App;
-
-import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
 

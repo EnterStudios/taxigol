@@ -14,7 +14,7 @@ public class AuthController extends Controller implements AuthHandler  {
 	private String taxiId;
 	private TaxiService service;
 	
-	public AuthController(Context context, TaxiService service) {
+	public AuthController( Context context,TaxiService service) {
 		super(context);
 		this.service = service;
 		taxiId = null;
@@ -29,14 +29,11 @@ public class AuthController extends Controller implements AuthHandler  {
 		runAsync(new DefaultTask<Taxi>() {
 			@Override
 			public Taxi execute() throws Exception{
-				System.out.println("Apptempting to log in");
 				String parseId = ParseInstallation.getCurrentInstallation().getObjectId();
-				System.out.println("Logging in with installation_id:"+parseId);
 				return service.auth(parseId);
 			}
 			@Override
 			public void onSuccess(Taxi result) {
-				System.out.println("AUTH succesful:"+result);
 				taxiId = result.getId();
 				success.onSuccess(null);
 			}
