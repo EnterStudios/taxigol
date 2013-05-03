@@ -3,10 +3,8 @@ package com.taxigol.taxi.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.content.Intent;
-
 import com.google.common.eventbus.Subscribe;
+import com.taxigol.taxi.ActivityLoader;
 import com.taxigol.taxi.activities.ConfirmacionActivity;
 import com.taxigol.taxi.activities.ServiciodeTaxiListActivity.ServiceHandler;
 import com.taxigol.taxi.controllers.async.CallbackEventTask;
@@ -27,12 +25,13 @@ public class ServiceController extends Controller implements ServiceHandler{
 	private TaxiServiceService client;
 	private IdProvider idProvider;
 	private List<Service> services;
+	private ActivityLoader loader;
 	
-	public ServiceController(IdProvider idProvider,Context activity, TaxiServiceService client) {
-		super(activity);
+	public ServiceController(ActivityLoader activityLoader, IdProvider idProvider,TaxiServiceService client) {
 		this.client = client;
 		this.idProvider = idProvider;
-		services = new ArrayList<Service>();		
+		services = new ArrayList<Service>();
+		loader = activityLoader;
 	}
 	
 	
@@ -130,6 +129,7 @@ public class ServiceController extends Controller implements ServiceHandler{
 	 */
 	@Subscribe
 	public void onServiceReceived(ServiceReceivedEvent event){
+		
 		final String serviceId = event.getData();
 		runAsync(new DefaultTask<Service>() {
 			@Override
@@ -138,11 +138,11 @@ public class ServiceController extends Controller implements ServiceHandler{
 			}
 			@Override
 			public void onSuccess(Service result) {
-				Intent i = new Intent(context,ConfirmacionActivity.class);
-				i.putExtra(ConfirmacionActivity.EXTRA_ADDRESS,result.getAddress());
-				i.putExtra(ConfirmacionActivity.EXTRA_ID, serviceId);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(i);
+				if (result!=null){
+					loader.load(ConfirmacionActivity.class, 
+							ConfirmacionActivity.EXTRA_ADDRESS,result.getAddress(), 
+							ConfirmacionActivity.EXTRA_ID, result.getId()+"");
+				}
 			}
 		});
 	}

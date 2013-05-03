@@ -49,11 +49,11 @@ public class MessageReceiver {
 
 	protected void postEvent(String channel, Object message) {
 
-		ServiceReceivedEvent event = new ServiceReceivedEvent(channel, new AsyncCallback<Void>() {
+		ServiceReceivedEvent event = new ServiceReceivedEvent(message.toString(), new AsyncCallback<Void>() {
 			
 			@Override
 			public void onSuccess(Void result) {
-				
+				System.out.println("Message successfuly posted");
 			}
 		});
 		eventBus.post(event);

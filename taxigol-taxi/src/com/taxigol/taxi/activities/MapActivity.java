@@ -124,7 +124,7 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 		if (location!=null){
 			LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
 
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+			map.moveCamera(CameraUpdateFactory.newLatLng(pos));
 		}
 	}
 

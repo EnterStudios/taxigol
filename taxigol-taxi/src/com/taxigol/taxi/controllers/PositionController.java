@@ -18,7 +18,6 @@ public class PositionController extends Controller implements Handler, MapHandle
 	private IdProvider idProvider;
 	
 	public PositionController(IdProvider idProvider, Context context, PositionService client) {
-		super(context);
 		this.receiver = new LocationReceiver(context);
 		this.client = client;
 		this.idProvider = idProvider;

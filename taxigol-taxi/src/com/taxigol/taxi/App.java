@@ -22,8 +22,10 @@ public class App extends Application{
 	private ServiceFactory serviceFactory;
 	
 	private EventBus bus;
+	private ActivityLoader loader;
 	
 	private MessageReceiver messageReceiver;
+	
 	 
 	@Override
 	public void onCreate() {  
@@ -34,15 +36,21 @@ public class App extends Application{
 		
 		serviceFactory = new ServiceFactory(getApplicationContext().getString(R.string.server_url));
 		
+		//Init EventBus
 		bus = new EventBus();
+		//Init ActivityLoader
+		loader = new DefaultActivityLoader();
+		loader.setContext(this.getApplicationContext());
 		
 		//Init controllers
-		authController = new AuthController(getApplicationContext(),serviceFactory.getTaxiService());
+		authController = new AuthController(serviceFactory.getTaxiService());
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());
-		servicesController = new ServiceController(authController,getApplicationContext(), serviceFactory.getTaxiServiceService());
+		servicesController = new ServiceController(loader,authController, serviceFactory.getTaxiServiceService());
 		
 		//Register buses
 		bus.register(servicesController);
+		bus.register(locationController);
+		
 		
 		messageReceiver = new MessageReceiver(getEventBus());
 		
@@ -62,6 +70,10 @@ public class App extends Application{
 
 	public EventBus getEventBus() {
 		return bus;
+	}
+	
+	public MessageReceiver getMessageReceiver() {
+		return messageReceiver;
 	}
 
 	
