@@ -1,13 +1,15 @@
 package com.taxigol.taxi.controllers;
 
+import com.google.common.eventbus.Subscribe;
 import com.parse.ParseInstallation;
-import com.taxigol.taxi.activities.AuthActivity.AuthHandler;
 import com.taxigol.taxi.controllers.async.DefaultTask;
-import com.taxigol.taxi.events.AsyncCallback;
+import com.taxigol.taxi.events.request.RequestLogin;
+import com.taxigol.taxi.events.response.ResponseLogin;
+import com.taxigol.taxi.model.IdProvider;
 import com.taxigol.taxi.model.Taxi;
 import com.taxigol.taxi.model.services.TaxiService;
 
-public class AuthController extends Controller implements AuthHandler  {
+public class AuthController extends Controller implements IdProvider{
 
 	private String taxiId;
 	private TaxiService service;
@@ -21,8 +23,8 @@ public class AuthController extends Controller implements AuthHandler  {
 		return taxiId;
 	}
 	
-	@Override
-	public void onLogin(String username, String password, final AsyncCallback<Void> success) {
+	@Subscribe
+	public void onLogin(RequestLogin event) {
 		runAsync(new DefaultTask<Taxi>() {
 			@Override
 			public Taxi execute() throws Exception{
@@ -31,10 +33,20 @@ public class AuthController extends Controller implements AuthHandler  {
 			}
 			@Override
 			public void onSuccess(Taxi result) {
-				taxiId = result.getId();
-				success.onSuccess(null);
+				System.out.println("Result:"+result);
+				if (result!=null){
+					taxiId = result.getId();
+					sendLogin(true);
+				}
+				else{
+					sendLogin(false);
+				}
 			}
 		});
+	}
+
+	public void sendLogin(boolean b) {
+		getEventBus().post(new ResponseLogin(b));
 	}
 	
 

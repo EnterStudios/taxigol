@@ -1,6 +1,7 @@
 package com.taxigol.taxi.controllers.async;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class AsyncTaskImpl<T> extends AsyncTask<Task<T>, Integer, T>{
 
@@ -9,6 +10,14 @@ public class AsyncTaskImpl<T> extends AsyncTask<Task<T>, Integer, T>{
 	
 	public AsyncTaskImpl() {
 		hasError = false;
+	}
+	
+	@Override
+	protected void onProgressUpdate(Integer... values) {
+		super.onProgressUpdate(values);
+		if (values.length>0){
+			Log.d("Progress Update", values[0]+"");
+		}
 	}
 	
 	@Override

@@ -39,16 +39,8 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="com.taxigol.taxi.activities.ConfirmacionActivity"
+            android:name="com.taxigol.taxi.activities.service.ConfirmServiceActivity"
             android:label="@string/title_activity_confirmacion" >
-        </activity>
-        <activity
-            android:name="com.taxigol.taxi.activities.SolicitudConfirmadaActivityadaActivity"
-            android:label="@string/title_activity_solicitud_confirmada" >
-        </activity>
-        <activity
-            android:name="com.taxigol.taxi.activities.PanicActivity"
-            android:label="@string/title_activity_panic" >
         </activity>
         <activity
             android:name="com.taxigol.taxi.activities.AuthActivity"
@@ -70,36 +62,26 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.taxigol.taxi.receivers.TaxiServiceReceiver" >
-            <intent-filter>
-                <action android:name="com.fer.taxis.TAXI_SERVICE" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.taxigol.taxi.receivers.PanicReceiver" >
-            <intent-filter>
-                <action android:name="com.fer.taxis.PANIC_SERVICE" />
-            </intent-filter>
-        </receiver>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBQqQY08VomrTDe2VFP200FSaot6GLGZaA" />
 
         <activity
-            android:name="com.taxigol.taxi.activities.ServiciodeTaxiListActivity"
+            android:name="com.taxigol.taxi.activities.service.ServicioListActivity"
             android:label="@string/title_serviciodetaxi_list" >
         </activity>
         <activity
-            android:name="com.taxigol.taxi.activities.ServiciodeTaxiDetailActivity"
+            android:name="com.taxigol.taxi.activities.service.ServiceShowActivity"
             android:label="@string/title_serviciodetaxi_detail"
-            android:parentActivityName="com.taxigol.taxi.activities.ServiciodeTaxiListActivity" >
+            android:parentActivityName="com.taxigol.taxi.activities.service.ServicioListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ServiciodeTaxiListActivity" />
         </activity>
         <activity
-            android:name="com.taxigol.taxi.activities.CreateMapObjectActivity"
-            android:label="@string/title_activity_create_map_object" >
+            android:name="com.taxigol.taxi.activities.service.ServiceListActivity"
+            android:label="@string/title_activity_service_list" >
         </activity>
     </application>
 

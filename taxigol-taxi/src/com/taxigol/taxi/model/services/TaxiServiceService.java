@@ -44,7 +44,7 @@ public interface TaxiServiceService extends IService<Service>{
 	 * @param taxiId
 	 * @throws Exception
 	 */
-	public void confirmarServicio(String serviceId, String taxiId) throws Exception;
+	public Service confirmarServicio(String serviceId, String taxiId) throws Exception;
 	/**
 	 * Marca un servicio como cumplido
 	 * @param serviceId
@@ -52,7 +52,7 @@ public interface TaxiServiceService extends IService<Service>{
 	 * @param verificationCode
 	 * @throws Exception
 	 */
-	public void cumplirServicio(String serviceId, String taxiId, String verificationCode) throws Exception;
+	public Service cumplirServicio(String serviceId, String taxiId, String verificationCode) throws Exception;
 	/**
 	 * 
 	 * @param taxiId
@@ -67,5 +67,5 @@ public interface TaxiServiceService extends IService<Service>{
 	 * @param taxiId
 	 * @throws Exception
 	 */
-	public void cancelarServicio(String serviceId, String taxiId) throws Exception;
+	public Service cancelarServicio(String serviceId, String taxiId) throws Exception;
 }

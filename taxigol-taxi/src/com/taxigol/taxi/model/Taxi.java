@@ -1,7 +1,9 @@
 package com.taxigol.taxi.model;
 
 public class Taxi {
+	
 	private String id;
+	private String installation_id;
 
 	public Taxi(String id) {
 		super();
@@ -14,6 +16,10 @@ public class Taxi {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getInstallationId() {
+		return installation_id;
 	}
 	
 	

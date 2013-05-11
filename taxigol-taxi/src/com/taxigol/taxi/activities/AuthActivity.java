@@ -1,18 +1,21 @@
 package com.taxigol.taxi.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Process;
+import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
-import com.taxigol.taxi.events.AsyncCallback;
-import com.taxigol.taxi.model.IdProvider;
+import com.taxigol.taxi.events.request.RequestLogin;
+import com.taxigol.taxi.events.response.ResponseLogin;
 import com.taxigol.taxi.views.widgets.Dialog;
 
 /**
@@ -20,27 +23,26 @@ import com.taxigol.taxi.views.widgets.Dialog;
  * well.
  */
 public class AuthActivity extends Activity implements OnClickListener{
-	
-	private AuthHandler handler;
-	
+		
 	private TextView txtLogin;
 	private TextView txtPass;
 	
-	private AlertDialog dialog;
+	private ProgressDialog dialog;
+	
+	private EventBus bus;
+	
+	private boolean loggedIn;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		loggedIn = false;
 		setContentView(R.layout.activity_auth);
 		findViewById(R.id.sign_in_button).setOnClickListener(this);
 		
 		txtPass = (TextView)findViewById(R.id.txtLogin);
 		txtLogin = (TextView)findViewById(R.id.txtPassword);
-				
-		this.handler = getApp().getAuthHandler();
-		
-		
+		bus = getApp().getEventBus();
 	}
 	
 	private App getApp() {
@@ -48,24 +50,9 @@ public class AuthActivity extends Activity implements OnClickListener{
 	}
 
 	@Override
-	public void onClick(View view) {
-		
-		
-		dialog = Dialog.showMessage("Autenticando", "Autenticando tu usuario y contrase�a", this);
-		String username = txtLogin.getText().toString();
-		String password = txtPass.getText().toString();
-		handler.onLogin(username,password, new AsyncCallback<Void>(){
-			@Override
-			public void onSuccess(Void result) {
-				Intent i = new Intent(AuthActivity.this, MapActivity.class);
-				startActivity(i);
-			}
-		});
-	}
-	
-	@Override
 	protected void onPause() {
 		super.onPause();
+		bus.unregister(this);
 		if (dialog!=null){
 			dialog.dismiss();
 		}
@@ -81,14 +68,46 @@ public class AuthActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (handler.getId()!=null){
+		bus.register(this);
+		if (loggedIn){
 			Intent i = new Intent(this, MapActivity.class);
 			startActivity(i);
 			finish();
 		}
 	}
-
-	public interface AuthHandler extends IdProvider{
-		public void onLogin(String username, String password, AsyncCallback<Void> callback);
+	
+	@Subscribe
+	public void onLoginResponse(ResponseLogin event){
+		dialog.hide();
+		loggedIn = event.isLoggedIn();
+		if (loggedIn){
+			Intent intent = new Intent(this, MapActivity.class);
+			startActivity(intent);
+		}
+		else{
+			Dialog.showMessage("Error autenticando", "Usuario o contraseña incorrectos", this);
+		}
 	}
+	
+	@Override
+	public void onClick(View view) {
+		
+		requestLogin();
+	}
+	
+	public void requestLogin(){
+		dialog = ProgressDialog.show(this, "Autenticando", "Espera un momento mientras te autenticamos");
+		String username = txtLogin.getText().toString();
+		String password = txtPass.getText().toString();
+		bus.post(new RequestLogin(new Pair<String, String>(username, password)));
+	}
+	
+	public void setBus(EventBus bus) {
+		this.bus = bus;
+	}
+	
+	public EventBus getBus() {
+		return bus;
+	}
+
 }

@@ -6,7 +6,6 @@ import com.google.common.eventbus.EventBus;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
-import com.taxigol.taxi.activities.AuthActivity.AuthHandler;
 import com.taxigol.taxi.activities.MapActivity;
 import com.taxigol.taxi.controllers.AuthController;
 import com.taxigol.taxi.controllers.PositionController;
@@ -48,9 +47,14 @@ public class App extends Application{
 		servicesController = new ServiceController(loader,authController, serviceFactory.getTaxiServiceService());
 		
 		//Register buses
+		servicesController.setEventBus(bus);
 		bus.register(servicesController);
+		
+		locationController.setEventBus(bus);
 		bus.register(locationController);
 		
+		authController.setEventBus(bus);
+		bus.register(authController);
 		
 		messageReceiver = new MessageReceiver(getEventBus());
 		
@@ -62,10 +66,6 @@ public class App extends Application{
 
 	public ServiceController getServiceController() {
 		return servicesController;
-	}
-
-	public AuthHandler getAuthHandler() {
-		return authController;
 	}
 
 	public EventBus getEventBus() {

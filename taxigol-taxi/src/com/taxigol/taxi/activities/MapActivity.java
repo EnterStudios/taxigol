@@ -1,84 +1,112 @@
 package com.taxigol.taxi.activities;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
-import com.taxigol.taxi.events.AsyncCallback;
-import com.taxigol.taxi.events.GetAllServicesEvent;
+import com.taxigol.taxi.activities.service.ServiceListActivity;
+import com.taxigol.taxi.activities.service.ServiceShowActivity;
+import com.taxigol.taxi.events.NewServiceArrivedEvent;
+import com.taxigol.taxi.events.ServicesChangedEvent;
+import com.taxigol.taxi.events.request.RequestLocation;
+import com.taxigol.taxi.events.request.RequestServices;
 import com.taxigol.taxi.model.LocationReceiver.Handler;
 import com.taxigol.taxi.model.Service;
 import com.taxigol.taxi.views.widgets.Dialog;
 
-public class MapActivity extends Activity implements OnClickListener, Handler{
+public class MapActivity extends Activity implements OnClickListener, OnInfoWindowClickListener{
 
+	private HashMap<Marker, Service> serviceMap;
+	
+	private EventBus bus;
+	
 	private GoogleMap map;
-	private MapHandler handler;
-
-	private Geocoder geoCoder;
+	private LatLng latestLocation;
+	/**
+	 * variable tells if its the first onResume()
+	 */
+	private boolean first;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		handler = getApp().getLocationController();
-
-		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-		handler.register(this);
-
-		onLocationChanged(handler.getLocation());
 		
-		geoCoder = new Geocoder(this);
+		serviceMap = new HashMap<Marker, Service>();
+		
+		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+		map.setMyLocationEnabled(true);
+		map.setOnInfoWindowClickListener(this);
+		
+		bus = getApp().getEventBus();
+		first = true;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		getApp().getEventBus().post(new GetAllServicesEvent(new AsyncCallback<List<Service>>() {
-			@Override
-			public void onSuccess(List<Service> result) {
-				System.out.println("Services returned: "+result);
-				for (Service service : result) {
-					try {
-						List<Address> addresses = geoCoder.getFromLocationName(service.getAddress(), 1, 4.570333,-74.181061, 4.766062,-73.998413);
-						System.out.println("Geocoding:"+addresses);
-						if (addresses.size()>0){
-							Address address = addresses.get(0);
-							MarkerOptions options = new MarkerOptions();
-							options.position(new LatLng(address.getLatitude(), address.getLongitude()));
-							options.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_user));
-							map.addMarker(options);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+		bus.register(this);
+		bus.post(new RequestServices());
+		bus.post(new RequestLocation());
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		bus.unregister(this);
+	}
+	
+	@Subscribe
+	public void onServicesChanged(ServicesChangedEvent event){
+		List<Service> services = event.getData();
+		if (services!=null){
+			for (Service service : services) {
+				
+				if (service.getLatitude()!=null && service.getLongitude() != null){
+					MarkerOptions options = getMarkerOptions(service.getLatitude(),service.getLongitude(), service.getAddress());
+					Marker marker = map.addMarker(options);
+					serviceMap.put(marker, service);
 				}
 			}
-		}));
+		}
 	}
-
-
+	
+	public MarkerOptions getMarkerOptions(double lat, double lon, String title){
+		MarkerOptions options = new MarkerOptions();
+		options.position(new LatLng(lat, lon));
+		options.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_user));
+		options.title(title);
+		options.snippet("Toca para más detalles");
+		return options;
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -95,9 +123,12 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_map:
+			if (latestLocation!=null){
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(latestLocation, 14));
+			}
 			return true;
 		case R.id.menu_services:
-			Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
+			Intent i = new Intent(this, ServiceListActivity.class);
 			startActivity(i);
 			return true;
 		default:
@@ -118,14 +149,53 @@ public class MapActivity extends Activity implements OnClickListener, Handler{
 		startActivity(i);
 	}
 
-
+	
 	@Override
+	public void onInfoWindowClick(Marker marker) {
+		Service s = serviceMap.get(marker);
+		if (s!=null){
+			Intent i = new Intent(this, ServiceShowActivity.class);
+			i.putExtra(ServiceShowActivity.EXTRA_SERVICE_ID, s.getId());
+			startActivity(i);
+		}
+	}
+
+
+	@Subscribe
 	public void onLocationChanged(Location location) {
 		if (location!=null){
 			LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-
-			map.moveCamera(CameraUpdateFactory.newLatLng(pos));
+			latestLocation = pos;
+			if (first){
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+				first = false;
+			}
 		}
+	}
+	
+	@Subscribe
+	public void onNewServicedArrived(NewServiceArrivedEvent event){
+		Service service = event.getData();
+		
+		Intent i = new Intent(this, ServiceShowActivity.class);
+		i.putExtra(ServiceShowActivity.EXTRA_SERVICE_ID, service.getId());
+		int flags = PendingIntent.FLAG_UPDATE_CURRENT | Intent.FLAG_ACTIVITY_NEW_TASK;
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, flags);
+		
+		NotificationCompat.Builder builder = new Builder(this);
+		
+		builder.setContentText(service.getAddress());
+		builder.setContentTitle("Nuevo servicio de taxi");
+		builder.setSmallIcon(R.drawable.map_user);
+		builder.setContentIntent(pendingIntent);
+		builder.setAutoCancel(true);
+		NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		
+		Notification notif = builder.build();
+		notif.defaults |= Notification.DEFAULT_SOUND;
+		notif.defaults |= Notification.DEFAULT_VIBRATE;
+		
+		manager.notify(service.getId(), notif);
 	}
 
 	public interface MapHandler{

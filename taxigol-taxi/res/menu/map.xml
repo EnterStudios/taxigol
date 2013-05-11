@@ -9,7 +9,7 @@
     
     <item android:id="@+id/menu_map"
           android:icon="@drawable/map_logo"
-          android:title="Mapa"
+          android:title="Mi ubicacion"
           android:showAsAction="ifRoom|withText" />
     
      

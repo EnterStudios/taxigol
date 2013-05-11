@@ -1,4 +1,4 @@
-package com.taxigol.taxi.activities;
+package com.taxigol.taxi.activities.service;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -8,15 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
-import com.taxigol.taxi.events.AsyncCallback;
-import com.taxigol.taxi.events.ConfirmServiceEvent;
+import com.taxigol.taxi.activities.MapActivity;
 import com.taxigol.taxi.views.widgets.Dialog;
 
-public class ConfirmacionActivity extends Activity implements OnClickListener {
+public class ConfirmServiceActivity extends Activity implements OnClickListener {
 
 	public final static String EXTRA_ADDRESS = "address"; 
 	public final static String EXTRA_ID = "id"; 
@@ -48,7 +46,7 @@ public class ConfirmacionActivity extends Activity implements OnClickListener {
 	        	startActivity(new Intent(this, MapActivity.class));
 	            return true;
 	        case R.id.menu_services:
-	        	Intent i = new Intent(this, ServiciodeTaxiListActivity.class);
+	        	Intent i = new Intent(this, ServiceListActivity.class);
 	        	startActivity(i);
 	            return true;
 	        default:
@@ -73,14 +71,14 @@ public class ConfirmacionActivity extends Activity implements OnClickListener {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					finish();
-					getApp().getEventBus().post(new ConfirmServiceEvent(servicioId, new AsyncCallback<Void>() {
-						@Override
-						public void onSuccess(Void result) {
-
-							Toast.makeText(getApplicationContext(), "Confirmacion enviada", Toast.LENGTH_LONG).show();
-						}
-					}));
+//					finish();
+//					getApp().getEventBus().post(new ConfirmServiceEvent(servicioId, new AsyncCallback<Void>() {
+//						@Override
+//						public void onSuccess(Void result) {
+//
+//							Toast.makeText(getApplicationContext(), "Confirmacion enviada", Toast.LENGTH_LONG).show();
+//						}
+//					}));
 				}
 			});
 		}

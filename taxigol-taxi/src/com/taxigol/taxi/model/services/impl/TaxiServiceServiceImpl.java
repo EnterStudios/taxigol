@@ -26,12 +26,12 @@ TaxiServiceService {
 	}
 
 	@Override
-	public void confirmarServicio(String serviceId, String taxiId) throws Exception{
-		client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.confirmado.toString(), "taxi_id", taxiId);
+	public Service confirmarServicio(String serviceId, String taxiId) throws Exception{
+		return client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.confirmado.toString(), "taxi_id", taxiId);
 	}
 	
-	public void cumplirServicio(String serviceId, String taxiId, String verificationCode) throws Exception{
-		client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.cumplido.toString(), "taxi_id", taxiId, "verification_code", verificationCode);
+	public Service cumplirServicio(String serviceId, String taxiId, String verificationCode) throws Exception{
+		return client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.cumplido.toString(), "taxi_id", taxiId, "verification_code", verificationCode);
 	}
 	
 	@Override
@@ -39,8 +39,8 @@ TaxiServiceService {
 		return client.get(baseUrl+"/"+resourceName+".json",parser.getListType(), "taxi_id",taxiId);
 	}
 
-	public void cancelarServicio(String serviceId, String taxiId) throws Exception {
-		client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.cancelado.toString(), "taxi_id", taxiId);
+	public Service cancelarServicio(String serviceId, String taxiId) throws Exception {
+		return client.put(baseUrl+"/"+resourceName+"/"+serviceId+".json",parser.getType(),"state", State.cancelado.toString(), "taxi_id", taxiId);
 	}
 	
 }

@@ -7,6 +7,13 @@ public class Service {
 	private String taxi_id;
 	private String verification_code;
 	private String address;
+	private Double latitude;
+	private Double longitude;
+	
+	public Service() {
+		latitude = null;
+		longitude = null;
+	}
 	
 	public Service(int id, String state, String verification_code,
 			String address, String taxi_id) {
@@ -41,6 +48,18 @@ public class Service {
 	@Override
 	public String toString() {
 		return "<"+state+","+address+">";
+	}
+	
+	public Double getLatitude() {
+		return latitude;
+	}
+	
+	public Double getLongitude() {
+		return longitude;
+	}
+	
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 }

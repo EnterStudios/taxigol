@@ -6,12 +6,13 @@ import com.google.common.eventbus.EventBus;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubException;
-import com.taxigol.taxi.events.AsyncCallback;
-import com.taxigol.taxi.events.ServiceReceivedEvent;
+import com.taxigol.taxi.events.request.TaxiServiceReceivedEvent;
 
 
 public class MessageReceiver {
 
+	private final static String CHANNEL_TAXI_SERVICS = "taxigol-pedir-taxi";
+	
 	private Pubnub pubnub;
 	private EventBus eventBus;
 	
@@ -26,7 +27,7 @@ public class MessageReceiver {
 		this.eventBus = bus;
 		
 		Hashtable<String, String> args = new Hashtable<String, String>();
-		args.put("channel", "taxigol-pedir-taxi");
+		args.put("channel", CHANNEL_TAXI_SERVICS);
 		try {
 			pubnub.subscribe(args, new Callback() {
 				@Override
@@ -49,13 +50,7 @@ public class MessageReceiver {
 
 	protected void postEvent(String channel, Object message) {
 
-		ServiceReceivedEvent event = new ServiceReceivedEvent(message.toString(), new AsyncCallback<Void>() {
-			
-			@Override
-			public void onSuccess(Void result) {
-				System.out.println("Message successfuly posted");
-			}
-		});
+		TaxiServiceReceivedEvent event = new TaxiServiceReceivedEvent(message.toString());
 		eventBus.post(event);
 	}
 	
