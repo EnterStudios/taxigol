@@ -7,6 +7,7 @@ public class AsyncTaskImpl<T> extends AsyncTask<Task<T>, Integer, T>{
 
 	private boolean hasError;
 	private Task<T> task;
+	private Exception exception;
 	
 	public AsyncTaskImpl() {
 		hasError = false;
@@ -27,6 +28,7 @@ public class AsyncTaskImpl<T> extends AsyncTask<Task<T>, Integer, T>{
 			return task.execute();
 		} catch (Exception e) {
 			hasError = true;
+			exception = e;
 		}
 		return null;
 	}
@@ -34,6 +36,9 @@ public class AsyncTaskImpl<T> extends AsyncTask<Task<T>, Integer, T>{
 	protected void onPostExecute(T result) {
 		if (!hasError){
 			task.onSuccess(result);
+		}
+		else if (exception!=null){
+			task.onFailure(exception);
 		}
 	};
 

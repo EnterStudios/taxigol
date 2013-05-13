@@ -3,17 +3,19 @@ package com.taxigol.taxi.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.v4.app.NotificationCompat;
-
 import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.ActivityLoader;
 import com.taxigol.taxi.controllers.async.DefaultTask;
+import com.taxigol.taxi.controllers.async.Task;
+import com.taxigol.taxi.events.NewServiceArrivedEvent;
 import com.taxigol.taxi.events.ServiceChangedEvent;
 import com.taxigol.taxi.events.ServicesChangedEvent;
-import com.taxigol.taxi.events.NewServiceArrivedEvent;
+import com.taxigol.taxi.events.request.RequestConfirmarServicio;
+import com.taxigol.taxi.events.request.RequestCumplirService;
 import com.taxigol.taxi.events.request.RequestService;
 import com.taxigol.taxi.events.request.RequestServices;
 import com.taxigol.taxi.events.request.TaxiServiceReceivedEvent;
+import com.taxigol.taxi.events.response.ResponseConfirmarServicio;
 import com.taxigol.taxi.events.response.ResponseService;
 import com.taxigol.taxi.model.IdProvider;
 import com.taxigol.taxi.model.Service;
@@ -34,16 +36,59 @@ public class ServiceController extends Controller{
 	}
 	
 	@Subscribe
-	public void onRequestServices(RequestServices services){
+	public void onRequestServices(RequestServices event){
 		runAsync(new DefaultTask<List<Service>>() {
 			@Override
 			public List<Service> execute() throws Exception {
-				return client.getAll();
+				return client.getAll(idProvider.getId());
 			}
 			@Override
 			public void onSuccess(List<Service> result) {
+				
 				ServiceController.this.services = result;
 				sendServicesChangedEvent();
+			}
+		});
+	}
+	
+	@Subscribe
+	public void onRequestConfirmarService(RequestConfirmarServicio event){
+		final int serviceId = event.getServiceId();
+		runAsync(new Task<Service>() {
+			@Override
+			public Service execute() throws Exception {
+				return client.confirmarServicio(""+serviceId, idProvider.getId());
+			}
+			@Override
+			public void onSuccess(Service result) {
+				System.out.println("Servicio confirmado:"+result);
+				getEventBus().post(new ResponseConfirmarServicio(result));
+			}
+			@Override
+			public void onFailure(Throwable throwable) {
+				onRequestServices(new RequestServices());
+				getEventBus().post(new ResponseConfirmarServicio(null));
+			}
+		});
+	}
+	
+	@Subscribe
+	public void onRequestCumplirService(RequestCumplirService event){
+		final int serviceId = event.getServiceId();
+		runAsync(new Task<Service>() {
+			@Override
+			public Service execute() throws Exception {
+				return client.confirmarServicio(""+serviceId, idProvider.getId());
+			}
+			@Override
+			public void onSuccess(Service result) {
+				System.out.println("Servicio confirmado:"+result);
+				getEventBus().post(new ResponseConfirmarServicio(result));
+			}
+			@Override
+			public void onFailure(Throwable throwable) {
+				onRequestServices(new RequestServices());
+				getEventBus().post(new ResponseConfirmarServicio(null));
 			}
 		});
 	}

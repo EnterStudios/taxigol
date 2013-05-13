@@ -6,27 +6,34 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
 import com.taxigol.taxi.activities.MapActivity;
 import com.taxigol.taxi.events.request.CompleteServiceRequest;
+import com.taxigol.taxi.events.request.RequestConfirmarServicio;
+import com.taxigol.taxi.events.request.RequestCumplirService;
 import com.taxigol.taxi.events.request.RequestService;
+import com.taxigol.taxi.events.response.ResponseConfirmarServicio;
 import com.taxigol.taxi.events.response.ResponseService;
 import com.taxigol.taxi.model.Service;
 import com.taxigol.taxi.views.widgets.Dialog;
@@ -37,13 +44,16 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 
 	public final static String EXTRA_SERVICE_ID = "service_id";
 
+	private EventBus bus;
 	
+	private Button btnCumplido;
 	
 	private GoogleMap map;
 	private TextView txtDireccion;
 	private AlertDialog dialog;
 
 	private int serviceId;
+	private Service service;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +61,9 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 		setContentView(R.layout.activity_serviciodetaxi_detail);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		getApp().getEventBus().register(this);
-
+		this.bus = getApp().getEventBus();
+		bus.register(this);
+		
 		txtDireccion = (TextView)findViewById(R.id.txtDireccion);
 		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.service_show_map)).getMap();
@@ -60,7 +71,8 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 		dialog = Dialog.showMessage("Cargando", "Cargando el servicio", this);
 
 		findViewById(R.id.btnCancelar).setOnClickListener(this);
-		findViewById(R.id.btnCumplido).setOnClickListener(this);
+		btnCumplido = (Button)findViewById(R.id.btnCumplido);
+		btnCumplido.setOnClickListener(this);
 	}
 
 	public App getApp() {
@@ -80,29 +92,42 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 		dialog.show();
 		serviceId = getIntent().getIntExtra(EXTRA_SERVICE_ID,-1);
 		getApp().getEventBus().post(new RequestService(serviceId));
-	}
-
-	@Subscribe
-	public void onServiceLoaded(ResponseService service) throws IOException{
-		Service result = service.getData();
-		System.out.println("RESULT:"+result);
-		txtDireccion.setText(result.getAddress());
 		
-		Double lat = result.getLatitude();
-		Double lon = result.getLongitude();
+	}
+	
+	private void updateView(){
+		map.clear();
+		txtDireccion.setText(service.getAddress());
+		if(service.isConfirmado()){
+			btnCumplido.setText("Verificar código");
+		}
+		else if (service.isPendiente()){
+			btnCumplido.setText("Confirmar servicio");
+		}
+		
+		BitmapDescriptor icon = service.isConfirmado()?BitmapDescriptorFactory.fromResource(R.drawable.map_marker_large):BitmapDescriptorFactory.fromResource(R.drawable.map_user);
+		
+		Double lat = service.getLatitude();
+		Double lon = service.getLongitude();
 		LatLng pos = null;
 		if (lat!=null & lon!=null){
 			pos = new LatLng(lat, lon);
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14));
 			MarkerOptions marker = new MarkerOptions();
 			marker.position(pos);
-			marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_user));
+			marker.icon(icon);
 			map.addMarker(marker);
 		}else{
 			Toast.makeText(this, "No se encontró la dirección en el mapa", Toast.LENGTH_LONG).show();
 		}
 		dialog.dismiss();
+	}
 
+	@Subscribe
+	public void onServiceLoaded(ResponseService service) throws IOException{
+		
+		this.service = service.getData();
+		updateView();
 	}
 
 	@Override
@@ -130,17 +155,36 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 
 	@Override
 	public void onClick(View v) {
-//		if (v.equals(findViewById(R.id.btnCancelar))){
-//			getApp().getEventBus().post(new CancelServiceEvent(serviceId, new AsyncCallback<Void>() {
-//				@Override
-//				public void onSuccess(Void result) {
-//					Toast.makeText(ServiceShowActivity.this, "Servicio cancelado exitosamente", Toast.LENGTH_LONG).show();
-//				}
-//			}));
-//		}
-//		else if (v.equals(findViewById(R.id.btnCumplido))){
-//			Dialog.showInputDialog("Verificar el codigo", "Ingresa el código del servicio para verificarlo", this, ServiceShowActivity.this);
-//		}
+		if (v.equals(btnCumplido)){
+			if(service.isConfirmado()){
+				dialog.setTitle("Verificando código");
+				dialog.setMessage("Espera un segundo mientras verificamos el código del servicio");
+				dialog.show();
+				bus.post(new RequestCumplirService(serviceId));
+			}
+			else if (service.isPendiente()){
+				dialog.setTitle("Confirmando servicio");
+				dialog.setMessage("Espera un segundo mientras confirmamos el servicio");
+				dialog.show();
+				bus.post(new RequestConfirmarServicio(serviceId));				
+			}
+		}
+	}
+	
+	@Subscribe
+	public void onResponseConfirmarServicio(ResponseConfirmarServicio event){
+		
+		dialog.dismiss();
+		if (event.isError()){
+			NavUtils.navigateUpTo(this, new Intent(this, MapActivity.class));
+			finish();
+			Toast.makeText(this, "El servicio ya ha sido confirmado", Toast.LENGTH_LONG).show();
+		}
+		else{
+			service = event.getData();
+			updateView();
+			Toast.makeText(this, "Servicio exitosamente confirmado", Toast.LENGTH_LONG).show();
+		}
 	}
 
 

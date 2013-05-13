@@ -62,4 +62,16 @@ public class Service {
 		this.address = address;
 	}
 	
+	public boolean isPendiente(){
+		return isState(State.pendiente);
+	}
+	
+	public boolean isConfirmado(){
+		return isState(State.confirmado);
+	}
+	
+	public boolean isState(State state){
+		return state.toString().equals(this.state);
+	}
+	
 }
