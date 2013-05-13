@@ -74,4 +74,8 @@ public class Service {
 		return state.toString().equals(this.state);
 	}
 	
+	public boolean validateCode(String code){
+		return code.equals(verification_code);
+	}
+	
 }

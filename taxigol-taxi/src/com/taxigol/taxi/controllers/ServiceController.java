@@ -75,20 +75,15 @@ public class ServiceController extends Controller{
 	@Subscribe
 	public void onRequestCumplirService(RequestCumplirService event){
 		final int serviceId = event.getServiceId();
-		runAsync(new Task<Service>() {
+		final String verificationCode = event.getVerificationCode();
+		runAsync(new DefaultTask<Service>() {
 			@Override
 			public Service execute() throws Exception {
-				return client.confirmarServicio(""+serviceId, idProvider.getId());
+				return client.cumplirServicio(serviceId+"", idProvider.getId(), verificationCode);
 			}
 			@Override
 			public void onSuccess(Service result) {
-				System.out.println("Servicio confirmado:"+result);
-				getEventBus().post(new ResponseConfirmarServicio(result));
-			}
-			@Override
-			public void onFailure(Throwable throwable) {
-				onRequestServices(new RequestServices());
-				getEventBus().post(new ResponseConfirmarServicio(null));
+				getEventBus().post(new ResponseCumplirServicio(result));
 			}
 		});
 	}
@@ -144,7 +139,7 @@ public class ServiceController extends Controller{
 		runAsync(new DefaultTask<List<Service>>(){
 			@Override
 			public List<Service> execute() throws Exception {
-				return client.getAll();
+				return client.getAll(idProvider.getId());
 			}
 			@Override
 			public void onSuccess(List<Service> result) {

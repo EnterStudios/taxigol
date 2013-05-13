@@ -29,6 +29,7 @@ import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
 import com.taxigol.taxi.activities.MapActivity;
+import com.taxigol.taxi.controllers.ResponseCumplirServicio;
 import com.taxigol.taxi.events.request.CompleteServiceRequest;
 import com.taxigol.taxi.events.request.RequestConfirmarServicio;
 import com.taxigol.taxi.events.request.RequestCumplirService;
@@ -157,10 +158,18 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 	public void onClick(View v) {
 		if (v.equals(btnCumplido)){
 			if(service.isConfirmado()){
-				dialog.setTitle("Verificando código");
-				dialog.setMessage("Espera un segundo mientras verificamos el código del servicio");
-				dialog.show();
-				bus.post(new RequestCumplirService(serviceId));
+				Dialog.showInputDialog("Codigo de seguridad", "Ingresa el codigo de seguridad", this, new OnInputDialogOkClicked() {
+					
+					@Override
+					public void onClicked(String body) {
+						String code = body.trim();
+						if (service.validateCode(code)){
+							bus.post(new RequestCumplirService(service.getId(), code));
+						}else{
+							Toast.makeText(ServiceShowActivity.this, "Codigo incorrecto, por favor intenta de nuevo", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
 			}
 			else if (service.isPendiente()){
 				dialog.setTitle("Confirmando servicio");
@@ -185,6 +194,13 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 			updateView();
 			Toast.makeText(this, "Servicio exitosamente confirmado", Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	@Subscribe
+	public void onResponseCumplirService(ResponseCumplirServicio event){
+		NavUtils.navigateUpTo(this, new Intent(this, MapActivity.class));
+		finish();
+		Toast.makeText(this, "Codigo exitosamente verificado", Toast.LENGTH_SHORT).show();
 	}
 
 

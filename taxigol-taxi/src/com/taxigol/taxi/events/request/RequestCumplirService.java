@@ -1,13 +1,19 @@
 package com.taxigol.taxi.events.request;
 
-public class RequestCumplirService extends HasData<Integer>{
+import android.util.Pair;
 
-	public RequestCumplirService(Integer serviceId) {
-		super(serviceId);
+public class RequestCumplirService extends HasData<Pair<Integer, String>>{
+
+	public RequestCumplirService(Integer serviceId, String verificationCode) {
+		super(new Pair<Integer, String>(serviceId, verificationCode));
 	}
 	
 	public Integer getServiceId(){
-		return getData();
+		return getData().first;
+	}
+	
+	public String getVerificationCode(){
+		return getData().second;
 	}
 
 	

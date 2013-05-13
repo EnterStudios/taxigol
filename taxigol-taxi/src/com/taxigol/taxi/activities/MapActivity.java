@@ -55,6 +55,8 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 	 */
 	private boolean firstOnResume;
 	
+	private List<Service> services;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,14 +88,20 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 	
 	@Subscribe
 	public void onServicesChanged(ServicesChangedEvent event){
-		List<Service> services = event.getData();
+		services = event.getData();
+		updateView();
+	}
+	
+	private void updateView(){
 		if (services!=null){
 			for (Service service : services) {
 				
-				if (service.getLatitude()!=null && service.getLongitude() != null){
+				if (service.getLatitude()!=null && service.getLongitude() != null
+						&& service.isConfirmado() || service.isPendiente()){
 					MarkerOptions options = getMarkerOptions(service);
 					Marker marker = map.addMarker(options);
 					serviceMap.put(marker, service);
+					
 				}
 			}
 		}
@@ -101,7 +109,13 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 	
 	public MarkerOptions getMarkerOptions(Service service){
 		
-		BitmapDescriptor icon = service.isConfirmado()?BitmapDescriptorFactory.fromResource(R.drawable.map_marker_large):BitmapDescriptorFactory.fromResource(R.drawable.map_user);
+		BitmapDescriptor icon = null;
+		if (service.isConfirmado()){
+			icon = BitmapDescriptorFactory.fromResource(R.drawable.map_marker_large);		
+		}
+		else if (service.isPendiente()){
+			icon = BitmapDescriptorFactory.fromResource(R.drawable.map_user);
+		}
 		
 		MarkerOptions options = new MarkerOptions();
 		options.position(new LatLng(service.getLatitude(), service.getLongitude()));
