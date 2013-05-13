@@ -23,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -52,7 +53,7 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 	/**
 	 * variable tells if its the first onResume()
 	 */
-	private boolean first;
+	private boolean firstOnResume;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		map.setOnInfoWindowClickListener(this);
 		
 		bus = getApp().getEventBus();
-		first = true;
+		firstOnResume = true;
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 			for (Service service : services) {
 				
 				if (service.getLatitude()!=null && service.getLongitude() != null){
-					MarkerOptions options = getMarkerOptions(service.getLatitude(),service.getLongitude(), service.getAddress());
+					MarkerOptions options = getMarkerOptions(service);
 					Marker marker = map.addMarker(options);
 					serviceMap.put(marker, service);
 				}
@@ -98,11 +99,14 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		}
 	}
 	
-	public MarkerOptions getMarkerOptions(double lat, double lon, String title){
+	public MarkerOptions getMarkerOptions(Service service){
+		
+		BitmapDescriptor icon = service.isConfirmado()?BitmapDescriptorFactory.fromResource(R.drawable.map_marker_large):BitmapDescriptorFactory.fromResource(R.drawable.map_user);
+		
 		MarkerOptions options = new MarkerOptions();
-		options.position(new LatLng(lat, lon));
-		options.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_user));
-		options.title(title);
+		options.position(new LatLng(service.getLatitude(), service.getLongitude()));
+		options.icon(icon);
+		options.title(service.getAddress());
 		options.snippet("Toca para más detalles");
 		return options;
 	}
@@ -166,9 +170,9 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		if (location!=null){
 			LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
 			latestLocation = pos;
-			if (first){
+			if (firstOnResume){
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
-				first = false;
+				firstOnResume = false;
 			}
 		}
 	}
