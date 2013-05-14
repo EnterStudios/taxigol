@@ -3,14 +3,13 @@ package com.taxigol.taxi;
 import android.app.Application;
 
 import com.google.common.eventbus.EventBus;
-import com.parse.Parse;
-import com.parse.ParseInstallation;
-import com.parse.PushService;
-import com.taxigol.taxi.activities.MapActivity;
 import com.taxigol.taxi.controllers.AuthController;
 import com.taxigol.taxi.controllers.PositionController;
 import com.taxigol.taxi.controllers.ServiceController;
-import com.taxigol.taxi.model.MessageReceiver;
+import com.taxigol.taxi.receivers.AUReceiver;
+import com.urbanairship.AirshipConfigOptions;
+import com.urbanairship.UAirship;
+import com.urbanairship.push.PushManager;
 
 public class App extends Application{
 
@@ -22,16 +21,15 @@ public class App extends Application{
 	
 	private EventBus bus;
 	private ActivityLoader loader;
-	
-	private MessageReceiver messageReceiver;
-	
-	 
+		
 	@Override
-	public void onCreate() {  
-		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key)); 
-		ParseInstallation.getCurrentInstallation().saveInBackground();		
-		PushService.subscribe(this, "Giants", MapActivity.class);
-		PushService.setDefaultPushCallback(this, MapActivity.class);
+	public void onCreate() {
+		
+		//init urban airhship stuff
+		AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(getApplicationContext());
+		UAirship.takeOff(this,options);
+		PushManager.shared().setIntentReceiver(AUReceiver.class);
+		PushManager.enablePush();
 		
 		serviceFactory = new ServiceFactory(getApplicationContext().getString(R.string.server_url));
 		
@@ -56,7 +54,6 @@ public class App extends Application{
 		authController.setEventBus(bus);
 		bus.register(authController);
 		
-		messageReceiver = new MessageReceiver(getEventBus());
 		
 	}
 	
@@ -71,10 +68,5 @@ public class App extends Application{
 	public EventBus getEventBus() {
 		return bus;
 	}
-	
-	public MessageReceiver getMessageReceiver() {
-		return messageReceiver;
-	}
-
 	
 }
