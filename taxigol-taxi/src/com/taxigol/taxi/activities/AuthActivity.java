@@ -1,6 +1,7 @@
 package com.taxigol.taxi.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.os.Process;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.common.eventbus.EventBus;
@@ -26,6 +28,7 @@ public class AuthActivity extends Activity implements OnClickListener{
 		
 	private TextView txtLogin;
 	private TextView txtPass;
+	private Button btnLogin;
 	
 	private ProgressDialog dialog;
 	
@@ -36,13 +39,19 @@ public class AuthActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		loggedIn = false;
 		setContentView(R.layout.activity_auth);
-		findViewById(R.id.sign_in_button).setOnClickListener(this);
 		
 		txtPass = (TextView)findViewById(R.id.txtLogin);
 		txtLogin = (TextView)findViewById(R.id.txtPassword);
+		btnLogin = (Button) findViewById(R.id.sign_in_button);
+		btnLogin.setOnClickListener(this);
+		
 		bus = getApp().getEventBus();
+		
+		dialog = ProgressDialog.show(this, "Autenticando", "Espera un momento mientras te autenticamos");
+		dialog.dismiss();
 	}
 	
 	private App getApp() {
@@ -96,10 +105,14 @@ public class AuthActivity extends Activity implements OnClickListener{
 	}
 	
 	public void requestLogin(){
-		dialog = ProgressDialog.show(this, "Autenticando", "Espera un momento mientras te autenticamos");
+		dialog.show();
 		String username = txtLogin.getText().toString();
 		String password = txtPass.getText().toString();
 		bus.post(new RequestLogin(new Pair<String, String>(username, password)));
+	}
+	
+	public boolean isLoggedIn() {
+		return loggedIn;
 	}
 	
 	public void setBus(EventBus bus) {
@@ -108,6 +121,22 @@ public class AuthActivity extends Activity implements OnClickListener{
 	
 	public EventBus getBus() {
 		return bus;
+	}
+
+	public TextView getUsernameView() {
+		return txtLogin;
+	}
+
+	public TextView getPasswordView() {
+		return txtPass;
+	}
+
+	public Button getLoginButton() {
+		return btnLogin;
+	}
+
+	public AlertDialog getDialog() {
+		return dialog;
 	}
 
 }

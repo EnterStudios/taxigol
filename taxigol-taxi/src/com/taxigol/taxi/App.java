@@ -44,6 +44,9 @@ public class App extends Application{
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());
 		servicesController = new ServiceController(loader,authController, serviceFactory.getTaxiServiceService());
 		
+		//Register dynamic broadcast receivers
+		registerReceiver(servicesController.getReceiver(), servicesController.getIntentFilter());
+		
 		//Register buses
 		servicesController.setEventBus(bus);
 		bus.register(servicesController);

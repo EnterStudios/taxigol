@@ -1,6 +1,6 @@
 package com.taxigol.taxi;
 
-import co.fernandohur.restz.HttpRequestRestz;
+import co.fernandohur.restz.DefaultRestz;
 import co.fernandohur.restz.Restz;
 
 import com.taxigol.taxi.model.services.PositionService;
@@ -17,7 +17,7 @@ public class ServiceFactory {
 	
 	
 	public ServiceFactory(String baseUrl) {
-		client = new HttpRequestRestz();
+		client = new DefaultRestz();
 		this.baseUrl = baseUrl;
 	}
 	

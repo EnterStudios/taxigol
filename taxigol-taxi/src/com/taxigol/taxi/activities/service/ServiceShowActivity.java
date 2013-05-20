@@ -125,10 +125,14 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 	}
 
 	@Subscribe
-	public void onServiceLoaded(ResponseService service) throws IOException{
-		
-		this.service = service.getData();
-		updateView();
+	public void onResponseService(ResponseService event) throws IOException{
+		this.service = event.getData();
+		if(service==null){
+			Toast.makeText(this, "El servicio ya no se encuentra disponible", Toast.LENGTH_SHORT).show();
+		}
+		else{
+			updateView();
+		}
 	}
 
 	@Override
@@ -145,10 +149,7 @@ public class ServiceShowActivity extends Activity implements OnClickListener, On
 		case R.id.menu_map:
 			startActivity(new Intent(this, MapActivity.class));
 			return true;
-		case R.id.menu_services:
-			Intent i = new Intent(this, ServiceListActivity.class);
-			startActivity(i);
-			return true;
+		
 		default:
 			return super.onOptionsItemSelected(item);
 		}

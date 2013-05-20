@@ -32,7 +32,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
-import com.taxigol.taxi.activities.service.ServiceListActivity;
 import com.taxigol.taxi.activities.service.ServiceShowActivity;
 import com.taxigol.taxi.events.NewServiceArrivedEvent;
 import com.taxigol.taxi.events.ServicesChangedEvent;
@@ -45,9 +44,7 @@ import com.taxigol.taxi.views.widgets.Dialog;
 public class MapActivity extends Activity implements OnClickListener, OnInfoWindowClickListener{
 
 	private HashMap<Marker, Service> serviceMap;
-	
 	private EventBus bus;
-	
 	private GoogleMap map;
 	private LatLng latestLocation;
 	/**
@@ -88,11 +85,13 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 	
 	@Subscribe
 	public void onServicesChanged(ServicesChangedEvent event){
+		
 		services = event.getData();
 		updateView();
 	}
 	
 	private void updateView(){
+		map.clear();
 		if (services!=null){
 			for (Service service : services) {
 				
@@ -145,10 +144,7 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(latestLocation, 14));
 			}
 			return true;
-		case R.id.menu_services:
-			Intent i = new Intent(this, ServiceListActivity.class);
-			startActivity(i);
-			return true;
+		
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -212,6 +208,8 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		Notification notif = builder.build();
 		notif.defaults |= Notification.DEFAULT_SOUND;
 		notif.defaults |= Notification.DEFAULT_VIBRATE;
+		
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(service.getLatitude(), service.getLongitude()),13));
 		
 		manager.notify(service.getId(), notif);
 	}

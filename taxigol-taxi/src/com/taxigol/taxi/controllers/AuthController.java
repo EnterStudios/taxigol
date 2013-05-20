@@ -1,13 +1,13 @@
 package com.taxigol.taxi.controllers;
 
 import com.google.common.eventbus.Subscribe;
-import com.parse.ParseInstallation;
 import com.taxigol.taxi.controllers.async.DefaultTask;
 import com.taxigol.taxi.events.request.RequestLogin;
 import com.taxigol.taxi.events.response.ResponseLogin;
 import com.taxigol.taxi.model.IdProvider;
 import com.taxigol.taxi.model.Taxi;
 import com.taxigol.taxi.model.services.TaxiService;
+import com.urbanairship.push.PushManager;
 
 public class AuthController extends Controller implements IdProvider{
 
@@ -28,8 +28,8 @@ public class AuthController extends Controller implements IdProvider{
 		runAsync(new DefaultTask<Taxi>() {
 			@Override
 			public Taxi execute() throws Exception{
-				String parseId = ParseInstallation.getCurrentInstallation().getObjectId();
-				return service.auth(parseId);
+				String apid = PushManager.shared().getAPID();
+				return service.auth(apid);
 			}
 			@Override
 			public void onSuccess(Taxi result) {

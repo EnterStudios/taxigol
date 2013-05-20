@@ -4,10 +4,10 @@ public class TaxiServiceReceivedEvent extends HasData<String> {
 
 	/**
 	 * 
-	 * @param data the service id
+	 * @param serviceId the service id
 	 */
-	public TaxiServiceReceivedEvent(String data) {
-		super(data);
+	public TaxiServiceReceivedEvent(String serviceId) {
+		super(serviceId);
 	}
 
 	public String getServiceId(){

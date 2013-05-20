@@ -16,6 +16,7 @@ public class Position {
 		this.longitude = longitude;
 		this.taxi_id = taxi_id;
 		this.created_at = created_at;
+		this.id = id;
 	}
 	
 	public Date getCreatedAt() {
