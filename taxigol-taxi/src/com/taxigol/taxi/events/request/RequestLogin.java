@@ -8,8 +8,17 @@ public class RequestLogin extends HasData<Pair<String, String>> {
 	 * 
 	 * @param data Pair=login,password
 	 */
-	public RequestLogin(Pair<String, String> data) {
-		super(data);
+	public RequestLogin(String login, String password) {
+		super(new Pair<String,String>(login, password));
 	}
+
+	public String getLogin() {
+		return getData().first;
+	}
+	
+	public String getPassword(){
+		return getData().second;
+	}
+	
 
 }
