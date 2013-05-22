@@ -3,6 +3,8 @@ package com.taxigol.taxi.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import android.util.Log;
+
 import com.google.common.eventbus.EventBus;
 
 public class MockEventBus extends EventBus {
@@ -16,6 +18,7 @@ public class MockEventBus extends EventBus {
 	@Override
 	public void post(Object obj) {
 		eventQueue.add(obj);
+		Log.d(this.getClass().toString(), "added object to evenQueue");
 	}
 	
 	@Override
