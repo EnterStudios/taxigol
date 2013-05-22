@@ -3,9 +3,11 @@ package com.taxigol.taxi;
 import co.fernandohur.restz.DefaultRestz;
 import co.fernandohur.restz.Restz;
 
+import com.taxigol.taxi.model.services.DriverService;
 import com.taxigol.taxi.model.services.PositionService;
 import com.taxigol.taxi.model.services.TaxiService;
 import com.taxigol.taxi.model.services.TaxiServiceService;
+import com.taxigol.taxi.model.services.impl.DriverServiceImpl;
 import com.taxigol.taxi.model.services.impl.PositionServiceImpl;
 import com.taxigol.taxi.model.services.impl.TaxiServiceImpl;
 import com.taxigol.taxi.model.services.impl.TaxiServiceServiceImpl;
@@ -31,6 +33,10 @@ public class ServiceFactory {
 	
 	public TaxiService getTaxiService(){
 		return new TaxiServiceImpl(baseUrl,client);
+	}
+
+	public DriverService getDriverService() {
+		return new DriverServiceImpl(baseUrl, client);
 	}
 
 	
