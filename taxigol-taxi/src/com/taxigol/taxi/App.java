@@ -42,7 +42,7 @@ public class App extends Application{
 		//Init controllers
 		authController = new AuthController(serviceFactory.getTaxiService());
 		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());
-		servicesController = new ServiceController(loader,authController, serviceFactory.getTaxiServiceService());
+		servicesController = new ServiceController(authController, serviceFactory.getTaxiServiceService());
 		
 		//Register dynamic broadcast receivers
 		registerReceiver(servicesController.getReceiver(), servicesController.getIntentFilter());

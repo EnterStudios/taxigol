@@ -35,7 +35,7 @@ public class TestServicesController extends ApplicationTestCase<App>{
 				return Arrays.asList(MockTaxiService.getService(),MockTaxiService.getService());
 			}
 		};
-		controller = new ServiceController(null, new MockIdProvider(), service);
+		controller = new ServiceController(new MockIdProvider(), service);
 		
 		controller.setEventBus(bus);
 	}

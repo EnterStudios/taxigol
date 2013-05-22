@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 
 import com.google.common.eventbus.Subscribe;
-import com.taxigol.taxi.ActivityLoader;
 import com.taxigol.taxi.controllers.async.DefaultTask;
 import com.taxigol.taxi.controllers.async.Task;
 import com.taxigol.taxi.events.NewServiceArrivedEvent;
@@ -29,15 +28,13 @@ public class ServiceController extends Controller{
 	private TaxiServiceService client;
 	private IdProvider idProvider;
 	private List<Service> services;
-	private ActivityLoader loader;
 	private BroadcastReceiver receiver;
 
 
-	public ServiceController(ActivityLoader activityLoader, IdProvider idProvider,TaxiServiceService client) {
+	public ServiceController(IdProvider idProvider,TaxiServiceService client) {
 		this.client = client;
 		this.idProvider = idProvider;
 		services = new ArrayList<Service>();
-		loader = activityLoader;
 
 		receiver = initReceiver();
 	} 

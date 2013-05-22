@@ -6,6 +6,15 @@ public class Driver {
 	private String name;
 	private int taxi_id;
 	private String password;
+	private int id;
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getCedula() {
 		return cedula;
