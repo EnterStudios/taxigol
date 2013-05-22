@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Forms -->
+    
+    <string name="title_activity_register"> Registrar conductor </string>
+    <string name="activity_register_name"> Nombre completo Ej: Roberto Rodriguez</string>
+    <string name="activity_register_cedula"> Cedula Ej: 102073143</string>
+    <string name="activity_register_password">Contraseña</string>
+    <string name="activity_register_password_confirm">Contraseña (de nuevo)</string>
+    <string name="activity_register_placa">Placa del Vehículo Ej: ABC123</string>
+    <string name="activity_register_button">Enviar registro</string>
+    
+    <!-- Error messages -->
+    <string name="error_passwords_match"> Las contraseñas ingresadas no coinciden </string>
+    <string name="error_name_short"> El nombre debe tener por lo menos 5 caracteres </string>
+    <string name="error_cedula_short"> La cedula debe tener por lo menos 5 caracteres </string>
+    <string name="error_placa_regex"> La placa ingresada no es correcta </string>
+    <string name="error_password_short"> La contraseña que ingresaste es muy corta </string>
+</resources>
