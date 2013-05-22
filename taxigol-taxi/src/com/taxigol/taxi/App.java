@@ -3,7 +3,7 @@ package com.taxigol.taxi;
 import android.app.Application;
 
 import com.google.common.eventbus.EventBus;
-import com.taxigol.taxi.controllers.AuthController;
+import com.taxigol.taxi.controllers.DriverController;
 import com.taxigol.taxi.controllers.PositionController;
 import com.taxigol.taxi.controllers.ServiceController;
 import com.taxigol.taxi.helpers.ActivityLoader;
@@ -17,7 +17,7 @@ public class App extends Application{
 
 	private PositionController locationController;
 	private ServiceController servicesController;
-	private AuthController authController;
+	private DriverController driverController;
 	 
 	private ServiceFactory serviceFactory;
 	
@@ -42,9 +42,9 @@ public class App extends Application{
 		loader.setContext(this.getApplicationContext());
 		
 		//Init controllers
-		authController = new AuthController(serviceFactory.getTaxiService());
-		locationController = new PositionController(authController,getApplicationContext(), serviceFactory.getPositionService());
-		servicesController = new ServiceController(authController, serviceFactory.getTaxiServiceService());
+		driverController = new DriverController(serviceFactory.getDriverService());
+		locationController = new PositionController(driverController,getApplicationContext(), serviceFactory.getPositionService());
+		servicesController = new ServiceController(driverController, serviceFactory.getTaxiServiceService());
 		
 		//Register dynamic broadcast receivers
 		registerReceiver(servicesController.getReceiver(), servicesController.getIntentFilter());
@@ -56,8 +56,8 @@ public class App extends Application{
 		locationController.setEventBus(bus);
 		bus.register(locationController);
 		
-		authController.setEventBus(bus);
-		bus.register(authController);
+		driverController.setEventBus(bus);
+		bus.register(driverController);
 		
 		
 	}
