@@ -1,4 +1,4 @@
-package com.taxigol.taxi;
+package com.taxigol.taxi.helpers;
 
 import android.app.Activity;
 import android.content.Context;

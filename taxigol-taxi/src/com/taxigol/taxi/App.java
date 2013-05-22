@@ -6,6 +6,8 @@ import com.google.common.eventbus.EventBus;
 import com.taxigol.taxi.controllers.AuthController;
 import com.taxigol.taxi.controllers.PositionController;
 import com.taxigol.taxi.controllers.ServiceController;
+import com.taxigol.taxi.helpers.ActivityLoader;
+import com.taxigol.taxi.helpers.DefaultActivityLoader;
 import com.taxigol.taxi.receivers.AUReceiver;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;

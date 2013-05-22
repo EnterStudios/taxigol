@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.taxigol.taxi.test;
+package com.taxigol.taxi.test.activities;
 
 import junit.framework.Assert;
 import android.app.AlertDialog;
