@@ -171,7 +171,7 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 	private Service getClosest(Service s1, Service s2, double lat, double lon){
 		double dist1 = Math.sqrt((s1.getLatitude()-lat)*(s1.getLatitude()-lat) + (s1.getLongitude()-lon)*(s1.getLatitude()-lon));
 		double dist2 = Math.sqrt((s2.getLatitude()-lat)*(s2.getLatitude()-lat) + (s2.getLongitude()-lon)*(s2.getLatitude()-lon));
-		if (dist1 > dist2){
+		if (dist1 < dist2){
 			return s1;
 		}
 		else{
