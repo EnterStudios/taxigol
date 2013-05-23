@@ -25,6 +25,9 @@ import com.taxigol.taxi.views.widgets.Dialog;
  */
 public class AuthActivity extends Activity implements OnClickListener{
 		
+	public static final String EXTRA_LOGIN = "extras.username";
+	public static final String EXTRA_PASS = "extras.password";
+	
 	private TextView txtLogin;
 	private TextView txtPass;
 	private Button btnLogin;
@@ -87,6 +90,13 @@ public class AuthActivity extends Activity implements OnClickListener{
 			Intent i = new Intent(this, MapActivity.class);
 			startActivity(i);
 			finish();
+		}else{
+			String username = getIntent().getStringExtra(EXTRA_LOGIN);
+			String password = getIntent().getStringExtra(EXTRA_PASS);
+			if (username !=null && password !=null){
+				txtLogin.setText(username);
+				txtPass.setText(password);
+			}
 		}
 	}
 	

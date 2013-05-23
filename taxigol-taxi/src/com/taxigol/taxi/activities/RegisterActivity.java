@@ -128,13 +128,16 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	public void onRegisterSuccessful(RegisterSuccessfulEvent event){
 		progressDialog.hide();
 		Toast.makeText(this, "Registro exitoso!", Toast.LENGTH_SHORT).show();
-		NavUtils.navigateUpTo(this, new Intent(this, AuthActivity.class));
+		Intent i = new Intent(this, AuthActivity.class);
+		i.putExtra(AuthActivity.EXTRA_LOGIN, getCedulaView().getText());
+		i.putExtra(AuthActivity.EXTRA_PASS, getPasswordView().getText());
+		NavUtils.navigateUpTo(this, i);
 	}
 	
 	@Subscribe
 	public void onRegisterFailed(RegisterFailedEvent event){
 		progressDialog.hide();
-		dialog = Dialog.showMessage("Error!", "No hemos podido registrarte. Verifica que tu cedula sea correcta.", this);
+		dialog = Dialog.showMessage("Error!", "No hemos podido registrarte. Verifica que tu cedula sea correcta o puede que ya estés registrado.", this);
 		dialog.show();
 	}
 	
