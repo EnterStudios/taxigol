@@ -155,6 +155,8 @@ public class RegisterActivityTest extends ActivityInstrumentationTestCase2<Regis
 		});
 	}
 	
+	
+	
 	void assertContainsError(List<String> errors,int resId){
 		assertTrue(errors.contains(activity.getString(resId)));
 	}

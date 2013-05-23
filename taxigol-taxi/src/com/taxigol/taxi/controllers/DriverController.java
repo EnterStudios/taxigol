@@ -7,6 +7,7 @@ import com.taxigol.taxi.events.RegisterFailedEvent;
 import com.taxigol.taxi.events.RegistrationEvent;
 import com.taxigol.taxi.events.request.RequestLogin;
 import com.taxigol.taxi.events.response.RegisterSuccessfulEvent;
+import com.taxigol.taxi.events.response.ResponseLogin;
 import com.taxigol.taxi.model.Driver;
 import com.taxigol.taxi.model.IdProvider;
 import com.taxigol.taxi.model.services.DriverService;
@@ -21,6 +22,7 @@ public class DriverController extends Controller implements IdProvider{
 		driver = null;
 	}
 	
+	@Subscribe
 	public void onRegistrationEvent(RegistrationEvent event){
 		final String name = event.getName();
 		final String cedula = event.getCedula();
@@ -59,6 +61,16 @@ public class DriverController extends Controller implements IdProvider{
 			@Override
 			public void onSuccess(Driver result) {
 				driver = result;
+				getEventBus().post(new ResponseLogin(true));
+			}
+			@Override
+			public void onFailure(Throwable throwable) {
+				if (throwable instanceof IllegalArgumentException){
+					getEventBus().post(new ResponseLogin(false));
+				}
+				else{
+					super.onFailure(throwable);
+				}
 			}
 		});
 	}

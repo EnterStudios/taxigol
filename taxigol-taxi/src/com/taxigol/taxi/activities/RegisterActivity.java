@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.taxigol.taxi.App;
 import com.taxigol.taxi.R;
 import com.taxigol.taxi.events.RegisterFailedEvent;
@@ -123,12 +124,14 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	@Subscribe
 	public void onRegisterSuccessful(RegisterSuccessfulEvent event){
 		progressDialog.hide();
 		Toast.makeText(this, "Registro exitoso!", Toast.LENGTH_SHORT).show();
 		NavUtils.navigateUpTo(this, new Intent(this, AuthActivity.class));
 	}
 	
+	@Subscribe
 	public void onRegisterFailed(RegisterFailedEvent event){
 		progressDialog.hide();
 		dialog = Dialog.showMessage("Error!", "No hemos podido registrarte. Verifica que tu cedula sea correcta.", this);
