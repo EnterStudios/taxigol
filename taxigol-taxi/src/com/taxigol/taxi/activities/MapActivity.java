@@ -144,9 +144,38 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(latestLocation, 14));
 			}
 			return true;
-		
+		case R.id.menu_servicio_cercano:
+			moveToClosestService();
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void moveToClosestService() {
+		if (latestLocation!=null){
+			double latitude = latestLocation.latitude;
+			double longitude = latestLocation.longitude;
+			Service service = null;
+			for (Service s : serviceMap.values()){
+				if (service == null){
+					service = s;
+				}
+				else{
+					service = getClosest(s, service, latitude, longitude);
+				}
+			}
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(service.getLatitude(), service.getLongitude()),15));
+		}
+	}
+	
+	private Service getClosest(Service s1, Service s2, double lat, double lon){
+		double dist1 = Math.sqrt((s1.getLatitude()-lat)*(s1.getLatitude()-lat) + (s1.getLongitude()-lon)*(s1.getLatitude()-lon));
+		double dist2 = Math.sqrt((s2.getLatitude()-lat)*(s2.getLatitude()-lat) + (s2.getLongitude()-lon)*(s2.getLatitude()-lon));
+		if (dist1 > dist2){
+			return s1;
+		}
+		else{
+			return s2;
 		}
 	}
 

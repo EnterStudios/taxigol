@@ -7,6 +7,11 @@
           android:title="Mi ubicacion"
           android:showAsAction="ifRoom|withText" />
     
+    <item android:id="@+id/menu_servicio_cercano"
+          android:icon="@drawable/map_user"
+          android:title="Servicio mas cercano"
+          android:showAsAction="ifRoom|withText" />
+    
      
     
 
