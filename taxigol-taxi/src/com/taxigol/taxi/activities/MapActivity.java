@@ -39,6 +39,7 @@ import com.taxigol.taxi.events.request.RequestLocation;
 import com.taxigol.taxi.events.request.RequestServices;
 import com.taxigol.taxi.model.LocationReceiver.Handler;
 import com.taxigol.taxi.model.Service;
+import com.taxigol.taxi.model.State;
 import com.taxigol.taxi.views.widgets.Dialog;
 
 public class MapActivity extends Activity implements OnClickListener, OnInfoWindowClickListener{
@@ -161,7 +162,9 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 					service = s;
 				}
 				else{
-					service = getClosest(s, service, latitude, longitude);
+					if (s.getState().equals(State.pendiente.toString())){
+						service = getClosest(s, service, latitude, longitude);
+					}
 				}
 			}
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(service.getLatitude(), service.getLongitude()),15));
