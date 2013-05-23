@@ -84,46 +84,8 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		bus.unregister(this);
 	}
 	
-	@Subscribe
-	public void onServicesChanged(ServicesChangedEvent event){
-		
-		services = event.getData();
-		updateView();
-	}
 	
-	private void updateView(){
-		map.clear();
-		if (services!=null){
-			for (Service service : services) {
-				
-				if (service.getLatitude()!=null && service.getLongitude() != null
-						&& service.isConfirmado() || service.isPendiente()){
-					MarkerOptions options = getMarkerOptions(service);
-					Marker marker = map.addMarker(options);
-					serviceMap.put(marker, service);
-					
-				}
-			}
-		}
-	}
 	
-	public MarkerOptions getMarkerOptions(Service service){
-		
-		BitmapDescriptor icon = null;
-		if (service.isConfirmado()){
-			icon = BitmapDescriptorFactory.fromResource(R.drawable.map_marker_large);		
-		}
-		else if (service.isPendiente()){
-			icon = BitmapDescriptorFactory.fromResource(R.drawable.map_user);
-		}
-		
-		MarkerOptions options = new MarkerOptions();
-		options.position(new LatLng(service.getLatitude(), service.getLongitude()));
-		options.icon(icon);
-		options.title(service.getAddress());
-		options.snippet("Toca para más detalles");
-		return options;
-	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -132,10 +94,6 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		return true;
 	}
 
-
-	private App getApp() {
-		return (App) getApplication();
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -152,39 +110,11 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		}
 	}
 
-	private void moveToClosestService() {
-		if (latestLocation!=null){
-			double latitude = latestLocation.latitude;
-			double longitude = latestLocation.longitude;
-			Service service = null;
-			for (Service s : serviceMap.values()){
-				if (service == null){
-					service = s;
-				}
-				else{
-					if (s.getState().equals(State.pendiente.toString())){
-						service = getClosest(s, service, latitude, longitude);
-					}
-				}
-			}
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(service.getLatitude(), service.getLongitude()),15));
-		}
-	}
 	
-	private Service getClosest(Service s1, Service s2, double lat, double lon){
-		double dist1 = Math.sqrt((s1.getLatitude()-lat)*(s1.getLatitude()-lat) + (s1.getLongitude()-lon)*(s1.getLatitude()-lon));
-		double dist2 = Math.sqrt((s2.getLatitude()-lat)*(s2.getLatitude()-lat) + (s2.getLongitude()-lon)*(s2.getLatitude()-lon));
-		if (dist1 < dist2){
-			return s1;
-		}
-		else{
-			return s2;
-		}
-	}
 
 	@Override
 	public void onBackPressed() {
-		Dialog.showAccept("Salir", "Estás seguro que deseas salir de la aplicacián?", this, this);
+		Dialog.showAccept("Salir", "Estás seguro que deseas salir de la aplicación?", this, this);
 	}
 
 	@Override
@@ -205,7 +135,16 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 			startActivity(i);
 		}
 	}
-
+	
+	//===============================================================
+	// EventBus @Subscribe methods
+	//===============================================================
+	
+	@Subscribe
+	public void onServicesChanged(ServicesChangedEvent event){
+		services = event.getData();
+		updateView();
+	}	
 
 	@Subscribe
 	public void onLocationChanged(Location location) {
@@ -250,7 +189,93 @@ public class MapActivity extends Activity implements OnClickListener, OnInfoWind
 		public void register(Handler locationHandler);
 		public Location getLocation();
 	}
-
 	
+	//========================================================
+	// Helper methods
+	//========================================================
+
+	/**
+	 * updates the view given the current services list
+	 */
+	public void updateView(){
+		map.clear();
+		if (services!=null){
+			for (Service service : services) {
+				
+				if (service.getLatitude()!=null && service.getLongitude() != null
+						&& service.isConfirmado() || service.isPendiente()){
+					MarkerOptions options = getMarkerOptions(service);
+					Marker marker = map.addMarker(options);
+					serviceMap.put(marker, service);
+					
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @return convenience method that returns the parsed App
+	 */
+	public App getApp() {
+		return (App) getApplication();
+	}
+	
+	/**
+	 * Moves the camera to the closes pending service
+	 */
+	public void moveToClosestService() {
+		if (latestLocation!=null){
+			double latitude = latestLocation.latitude;
+			double longitude = latestLocation.longitude;
+			Service service = null;
+			for (Service s : serviceMap.values()){
+				if (service == null){
+					service = s;
+				}
+				else{
+					if (s.getState().equals(State.pendiente.toString())){
+						service = getClosest(s, service, latitude, longitude);
+					}
+				}
+			}
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(service.getLatitude(), service.getLongitude()),15));
+		}
+	}
+	
+	/**
+	 * @param s1
+	 * @param s2
+	 * @param lat
+	 * @param lon
+	 * @return Given services s1 and s2, returns the service closes to lat,lon
+	 */
+	public Service getClosest(Service s1, Service s2, double lat, double lon){
+		double dist1 = Math.sqrt((s1.getLatitude()-lat)*(s1.getLatitude()-lat) + (s1.getLongitude()-lon)*(s1.getLatitude()-lon));
+		double dist2 = Math.sqrt((s2.getLatitude()-lat)*(s2.getLatitude()-lat) + (s2.getLongitude()-lon)*(s2.getLatitude()-lon));
+		if (dist1 < dist2){
+			return s1;
+		}
+		else{
+			return s2;
+		}
+	}
+	
+	public MarkerOptions getMarkerOptions(Service service){
+		
+		BitmapDescriptor icon = null;
+		if (service.isConfirmado()){
+			icon = BitmapDescriptorFactory.fromResource(R.drawable.map_marker_large);		
+		}
+		else if (service.isPendiente()){
+			icon = BitmapDescriptorFactory.fromResource(R.drawable.map_user);
+		}
+		
+		MarkerOptions options = new MarkerOptions();
+		options.position(new LatLng(service.getLatitude(), service.getLongitude()));
+		options.icon(icon);
+		options.title(service.getAddress());
+		options.snippet("Toca para más detalles");
+		return options;
+	}
 
 }
