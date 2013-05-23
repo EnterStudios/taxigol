@@ -40,18 +40,7 @@ public class TestServicesController extends ApplicationTestCase<App>{
 		controller.setEventBus(bus);
 	}
 	
-	public void testRequestServices() throws InterruptedException{
-		
-		List<Service> services = controller.getServices();
-		Assert.assertEquals(0, services.size());
-		
-		controller.onRequestServices(new RequestServices());
-		
-		Thread.sleep(300);
-		
-		services = controller.getServices();
-		Assert.assertEquals(2, services.size());
-	}
+	
 	
 	
 	

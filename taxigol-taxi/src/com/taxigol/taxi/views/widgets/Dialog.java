@@ -40,7 +40,7 @@ public class Dialog {
 		View v = inflater.inflate(com.taxigol.taxi.R.layout.dialog_input, null);
 		
 		final TextView userInput = (TextView)v
-				.findViewById(R.id.editText1);
+				.findViewById(R.id.txtName);
 		
 		return new AlertDialog.Builder(context)
 		

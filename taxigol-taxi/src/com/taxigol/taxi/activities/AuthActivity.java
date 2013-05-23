@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,12 +28,14 @@ public class AuthActivity extends Activity implements OnClickListener{
 	private TextView txtLogin;
 	private TextView txtPass;
 	private Button btnLogin;
+	private Button btnRegister;
 	
 	private ProgressDialog dialog;
 	
 	private EventBus bus;
 	
 	private boolean loggedIn;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,11 @@ public class AuthActivity extends Activity implements OnClickListener{
 		txtPass = (TextView)findViewById(R.id.txtLogin);
 		txtLogin = (TextView)findViewById(R.id.txtPassword);
 		btnLogin = (Button) findViewById(R.id.sign_in_button);
+		btnRegister = (Button) findViewById(R.id.btnCrearCuenta);
+		
+		btnRegister.setOnClickListener(this);
 		btnLogin.setOnClickListener(this);
+		
 		
 		bus = getApp().getEventBus();
 		
@@ -101,14 +106,19 @@ public class AuthActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View view) {
 		
-		requestLogin();
+		if (view.equals(btnLogin)){
+			requestLogin();
+		}
+		else if (view.equals(btnRegister)){
+			startActivity(new Intent(this, RegisterActivity.class));
+		}
 	}
 	
 	public void requestLogin(){
 		dialog.show();
 		String username = txtLogin.getText().toString();
 		String password = txtPass.getText().toString();
-		bus.post(new RequestLogin(new Pair<String, String>(username, password)));
+		bus.post(new RequestLogin(username, password));
 	}
 	
 	public boolean isLoggedIn() {
